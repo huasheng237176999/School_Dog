@@ -5,12 +5,12 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>學校周邊人犬衝突熱區分析展示平台</title>
-  <meta name="description" content="展示已完成之學校周邊人犬衝突熱區分析成果，協助理解熱區與學校周邊空間重疊情形。" />
+  <meta name="description" content="展示已完成之學校周邊人犬衝突熱區分析成果，透過全臺圖層、縣市排名與縣市成果展示，協助理解熱區與學校周邊空間重疊情形。" />
   <style>
     :root {
       --bg: oklch(98% 0.006 210);
       --surface: oklch(100% 0 0);
-      --surface-soft: oklch(96% 0.018 210);
+      --surface-2: oklch(96% 0.018 210);
       --fg: oklch(23% 0.028 230);
       --muted: oklch(50% 0.025 230);
       --border: oklch(88% 0.018 220);
@@ -18,15 +18,16 @@
       --teal-dark: oklch(39% 0.1 185);
       --blue: oklch(54% 0.15 240);
       --green-soft: oklch(94% 0.055 165);
-      --warn-soft: oklch(93% 0.055 55);
-      --danger-soft: oklch(92% 0.055 28);
+      --blue-soft: oklch(93% 0.045 235);
+      --orange-soft: oklch(93% 0.06 55);
+      --red-soft: oklch(92% 0.055 28);
       --class0: #eeeeee;
       --class1: #fff7bc;
       --class2: #fee391;
       --class3: #fec44f;
       --class4: #fe9929;
       --class5: #d95f0e;
-      --shadow: 0 24px 70px rgba(20, 45, 65, 0.11);
+      --shadow: 0 24px 80px rgba(20, 45, 65, 0.12);
       --radius-xl: 28px;
       --font-body: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
       --font-mono: "SFMono-Regular", "Cascadia Code", ui-monospace, monospace;
@@ -37,10 +38,9 @@
 
     body {
       margin: 0;
-      min-height: 100vh;
       background:
-        radial-gradient(circle at 8% 0%, rgba(42, 157, 143, 0.16), transparent 34rem),
-        radial-gradient(circle at 92% 8%, rgba(38, 139, 210, 0.12), transparent 30rem),
+        radial-gradient(circle at top left, rgba(42, 157, 143, 0.14), transparent 34rem),
+        radial-gradient(circle at 92% 4%, rgba(254, 153, 41, 0.1), transparent 28rem),
         linear-gradient(180deg, var(--bg), oklch(96% 0.012 220));
       color: var(--fg);
       font-family: var(--font-body);
@@ -53,7 +53,7 @@
     a { color: inherit; }
 
     .page {
-      width: min(1480px, calc(100% - 40px));
+      width: min(1440px, calc(100% - 40px));
       margin: 0 auto;
       padding: 28px 0 72px;
     }
@@ -70,9 +70,9 @@
       margin-bottom: 28px;
       border: 1px solid color-mix(in oklch, var(--border), white 18%);
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.82);
+      background: rgba(255, 255, 255, 0.8);
       backdrop-filter: blur(18px);
-      box-shadow: 0 12px 38px rgba(31, 65, 88, 0.08);
+      box-shadow: 0 12px 40px rgba(31, 65, 88, 0.08);
     }
 
     .brand {
@@ -129,20 +129,15 @@
 
     .nav a:hover {
       color: var(--fg);
-      background: var(--surface-soft);
+      background: var(--surface-2);
     }
 
-    .card,
-    .panel,
-    .map-card,
-    .side-card {
-      background: rgba(255, 255, 255, 0.94);
+    .card, .panel, .soft-card {
+      background: rgba(255, 255, 255, 0.93);
       border: 1px solid color-mix(in oklch, var(--border), white 14%);
+      border-radius: var(--radius-xl);
       box-shadow: var(--shadow);
     }
-
-    .card,
-    .panel { border-radius: var(--radius-xl); }
 
     .panel {
       margin-top: 24px;
@@ -157,7 +152,7 @@
     }
 
     h1 {
-      max-width: 14ch;
+      max-width: 15ch;
       margin: 24px 0 16px;
       font-size: clamp(40px, 5vw, 72px);
       line-height: 1.04;
@@ -174,7 +169,7 @@
 
     .hero {
       display: grid;
-      grid-template-columns: minmax(0, 0.9fr) minmax(560px, 1.1fr);
+      grid-template-columns: minmax(0, 0.9fr) minmax(520px, 1.1fr);
       gap: 24px;
       align-items: stretch;
       margin-bottom: 24px;
@@ -183,7 +178,7 @@
     .hero-copy {
       position: relative;
       overflow: hidden;
-      min-height: 620px;
+      min-height: 600px;
       padding: clamp(28px, 4vw, 54px);
       display: flex;
       flex-direction: column;
@@ -193,10 +188,10 @@
     .hero-copy::after {
       content: "";
       position: absolute;
-      right: -170px;
-      bottom: -190px;
-      width: 470px;
-      height: 470px;
+      right: -160px;
+      bottom: -180px;
+      width: 450px;
+      height: 450px;
       border-radius: 50%;
       background: radial-gradient(circle, rgba(217, 95, 14, 0.14), transparent 68%);
       pointer-events: none;
@@ -234,56 +229,6 @@
       text-wrap: pretty;
     }
 
-    .modebar {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
-      margin-top: 22px;
-    }
-
-    .segmented {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .segmented button {
-      appearance: none;
-      border: 1px solid var(--border);
-      background: white;
-      color: var(--muted);
-      border-radius: 999px;
-      padding: 8px 13px;
-      cursor: pointer;
-      font-weight: 800;
-      transition: 0.18s ease;
-    }
-
-    .segmented button.is-active,
-    .segmented button:hover {
-      color: white;
-      background: linear-gradient(135deg, var(--teal), var(--blue));
-      border-color: transparent;
-      box-shadow: 0 10px 22px rgba(42, 157, 143, 0.18);
-    }
-
-    select {
-      min-width: 220px;
-      appearance: none;
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      background: white;
-      color: var(--fg);
-      padding: 9px 38px 9px 14px;
-      background-image:
-        linear-gradient(45deg, transparent 50%, var(--muted) 50%),
-        linear-gradient(135deg, var(--muted) 50%, transparent 50%);
-      background-position: calc(100% - 18px) 54%, calc(100% - 12px) 54%;
-      background-size: 6px 6px, 6px 6px;
-      background-repeat: no-repeat;
-    }
-
     .hero-stats {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -293,23 +238,23 @@
       z-index: 1;
     }
 
-    .mini {
+    .mini, .metric {
       padding: 16px;
       border: 1px solid var(--border);
       border-radius: 18px;
       background: rgba(255, 255, 255, 0.78);
     }
 
-    .mini b {
+    .mini b, .metric b {
       display: block;
-      font-size: 26px;
+      font-size: 24px;
       letter-spacing: -0.04em;
       font-variant-numeric: tabular-nums;
     }
 
-    .mini span {
+    .mini span, .metric span {
       display: block;
-      margin-top: 3px;
+      margin-top: 2px;
       color: var(--muted);
       font-size: 12px;
       line-height: 1.45;
@@ -336,8 +281,7 @@
         rgba(255,255,255,0.95);
     }
 
-    .section-head,
-    .map-title-row {
+    .section-head, .map-title-row {
       display: flex;
       justify-content: space-between;
       gap: 16px;
@@ -351,7 +295,7 @@
       gap: 6px;
       padding: 6px 10px;
       border-radius: 999px;
-      background: var(--danger-soft);
+      background: var(--red-soft);
       color: color-mix(in oklch, var(--class5), black 12%);
       font-size: 12px;
       font-weight: 850;
@@ -369,7 +313,7 @@
       border: 1px solid var(--border);
       border-radius: 22px;
       background: linear-gradient(135deg, oklch(97% 0.012 210), white);
-      min-height: 440px;
+      min-height: 420px;
       display: grid;
       place-items: center;
     }
@@ -447,230 +391,124 @@
       font-size: 14px;
     }
 
-    .dashboard-grid {
+    .national-layout {
       display: grid;
-      grid-template-columns: 280px minmax(0, 1fr) 360px;
+      grid-template-columns: 320px minmax(0, 1fr);
       gap: 24px;
       align-items: start;
       margin-top: 20px;
     }
 
-    .sidebar,
-    .right-panel {
-      display: grid;
-      gap: 14px;
+    .layer-panel {
+      padding: 18px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid color-mix(in oklch, var(--border), white 8%);
+      box-shadow: 0 18px 50px rgba(20, 45, 65, 0.08);
     }
 
-    .side-card {
-      padding: 18px;
-      border-radius: 22px;
+    .layer-panel h3 {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.3;
+      letter-spacing: -0.03em;
+    }
+
+    .layer-panel .caption {
+      margin: 4px 0 14px;
+      color: var(--muted);
+      font-size: 14px;
     }
 
     .layer-list {
       display: grid;
-      gap: 10px;
+      gap: 12px;
       margin-top: 14px;
     }
 
-    .layer-btn {
+    .layer-card {
       width: 100%;
       appearance: none;
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      background: white;
-      padding: 12px;
-      text-align: left;
+      border: 1px solid color-mix(in oklch, var(--border), var(--muted) 8%);
+      background: rgba(255, 255, 255, 0.92);
       color: var(--fg);
+      border-radius: 18px;
+      padding: 15px 16px;
+      text-align: left;
       cursor: pointer;
-      transition: 0.18s ease;
+      box-shadow: 0 8px 24px rgba(20, 45, 65, 0.06);
+      transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease,
+        border-color 0.18s ease,
+        background 0.18s ease;
     }
 
-    .layer-btn:hover,
-    .layer-btn.is-active {
-      border-color: color-mix(in oklch, var(--class4), white 32%);
-      background: linear-gradient(180deg, white, var(--warn-soft));
-      box-shadow: 0 12px 30px rgba(184, 96, 38, 0.08);
+    .layer-card:hover {
+      transform: translateY(-1px);
+      border-color: color-mix(in oklch, var(--teal), white 38%);
+      background: #ffffff;
+      box-shadow: 0 14px 34px rgba(20, 45, 65, 0.10);
     }
 
-    .layer-btn strong {
-      display: block;
-      font-size: 14px;
-      margin-bottom: 3px;
+    .layer-card.is-active {
+      border-color: color-mix(in oklch, var(--class4), white 34%);
+      background: linear-gradient(180deg, #ffffff 0%, #fff6ec 100%);
+      box-shadow: 0 16px 40px rgba(184, 96, 38, 0.14);
     }
 
-    .layer-btn span {
-      display: block;
+    .layer-card-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .layer-card h3 {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.35;
+      font-weight: 850;
+      letter-spacing: -0.02em;
+      color: var(--fg);
+      text-align: left;
+    }
+
+    .layer-card p {
+      margin: 0;
       color: var(--muted);
-      font-size: 12px;
-      line-height: 1.45;
+      font-size: 13px;
+      line-height: 1.55;
+      text-align: left;
     }
 
-    .map-card {
+    .layer-badge {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #ffe1d6;
+      color: #c45a2a;
+      font-size: 11px;
+      font-weight: 800;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+
+    .layer-card.is-active .layer-badge {
+      background: #ffd8c9;
+      color: #a9471f;
+    }
+
+    .featured-map, .county-map-card {
       padding: 24px;
       border-radius: var(--radius-xl);
-    }
-
-    .metric-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-      margin-top: 14px;
-    }
-
-    .metric {
-      padding: 14px;
-      border-radius: 18px;
-      border: 1px solid var(--border);
-      background: var(--surface-soft);
-    }
-
-    .metric b {
-      display: block;
-      font-size: 22px;
-      letter-spacing: -0.04em;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .metric span {
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .metric.wide {
-      grid-column: 1 / -1;
-      background: linear-gradient(135deg, color-mix(in oklch, var(--green-soft), white 36%), white);
-    }
-
-    .insight-box {
-      padding: 18px;
-      border: 1px solid color-mix(in oklch, var(--teal), white 50%);
-      border-radius: 22px;
-      background: linear-gradient(180deg, white, color-mix(in oklch, var(--green-soft), white 40%));
-    }
-
-    .insight-box p {
-      margin: 8px 0 0;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.72;
-    }
-
-    .bar-chart {
-      display: grid;
-      gap: 10px;
-      margin-top: 14px;
-    }
-
-    .bar-row {
-      display: grid;
-      grid-template-columns: 92px minmax(0, 1fr) 74px;
-      gap: 10px;
-      align-items: center;
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .bar-track {
-      height: 16px;
-      border-radius: 999px;
-      background: color-mix(in oklch, var(--border), white 42%);
-      overflow: hidden;
-      border: 1px solid color-mix(in oklch, var(--border), white 10%);
-    }
-
-    .bar-fill {
-      height: 100%;
-      border-radius: inherit;
-      min-width: 2px;
-    }
-
-    .bar-value {
-      text-align: right;
-      font-family: var(--font-mono);
-      font-variant-numeric: tabular-nums;
-    }
-
-    .viz-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
-      gap: 24px;
-      align-items: start;
-    }
-
-    .ranking-list {
-      display: grid;
-      gap: 10px;
-      margin-top: 18px;
-    }
-
-    .rank-row {
-      display: grid;
-      grid-template-columns: 44px minmax(96px, 1fr) 120px 120px 86px;
-      gap: 12px;
-      align-items: center;
-      padding: 12px;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      background: white;
-      cursor: pointer;
-      transition: 0.18s ease;
-    }
-
-    .rank-row:hover,
-    .rank-row.is-selected {
-      border-color: color-mix(in oklch, var(--teal), white 35%);
-      background: linear-gradient(180deg, white, color-mix(in oklch, var(--green-soft), white 48%));
-      transform: translateY(-1px);
-    }
-
-    .rank-no {
-      width: 34px;
-      height: 34px;
-      display: grid;
-      place-items: center;
-      border-radius: 12px;
-      background: var(--fg);
-      color: white;
-      font-family: var(--font-mono);
-      font-size: 12px;
-      font-weight: 850;
-    }
-
-    .rank-city strong { display: block; }
-    .rank-city span {
-      display: block;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .rank-metric {
-      text-align: right;
-      font-family: var(--font-mono);
-      font-variant-numeric: tabular-nums;
-      font-size: 13px;
-    }
-
-    .rank-metric small {
-      display: block;
-      color: var(--muted);
-      font-family: var(--font-body);
-      font-size: 11px;
-    }
-
-    .ratio-line {
-      height: 8px;
-      border-radius: 999px;
-      background: color-mix(in oklch, var(--border), white 35%);
-      overflow: hidden;
-      margin-top: 6px;
-    }
-
-    .ratio-line span {
-      display: block;
-      height: 100%;
-      border-radius: inherit;
-      background: linear-gradient(90deg, var(--class3), var(--class5));
-      min-width: 2px;
+      border: 1px solid color-mix(in oklch, var(--border), white 14%);
+      background: rgba(255,255,255,0.94);
+      box-shadow: var(--shadow);
     }
 
     .method-flow {
@@ -686,7 +524,7 @@
       padding: 20px;
       border: 1px solid var(--border);
       border-radius: 22px;
-      background: linear-gradient(180deg, white, var(--surface-soft));
+      background: linear-gradient(180deg, white, var(--surface-2));
       min-height: 220px;
     }
 
@@ -734,12 +572,191 @@
       line-height: 1.65;
     }
 
+    .viz-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 340px;
+      gap: 24px;
+      align-items: start;
+      margin-top: 20px;
+    }
+
+    .ranking-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .rank-row {
+      display: grid;
+      grid-template-columns: 44px minmax(112px, 1fr) 130px 130px 86px;
+      gap: 12px;
+      align-items: center;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: white;
+      cursor: pointer;
+      transition: 0.18s ease;
+    }
+
+    .rank-row:hover,
+    .rank-row.is-selected {
+      border-color: color-mix(in oklch, var(--teal), white 35%);
+      background: linear-gradient(180deg, white, color-mix(in oklch, var(--green-soft), white 48%));
+      transform: translateY(-1px);
+    }
+
+    .rank-no {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: var(--fg);
+      color: white;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 850;
+    }
+
+    .rank-city strong { display: block; }
+    .rank-city span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .ratio-line {
+      height: 8px;
+      border-radius: 999px;
+      background: color-mix(in oklch, var(--border), white 35%);
+      overflow: hidden;
+      margin-top: 6px;
+    }
+
+    .ratio-line span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--class3), var(--class5));
+      min-width: 2px;
+    }
+
+    .rank-metric {
+      text-align: right;
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+      font-size: 13px;
+    }
+
+    .rank-metric small {
+      display: block;
+      color: var(--muted);
+      font-family: var(--font-body);
+      font-size: 11px;
+    }
+
+    .control-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: 0;
+    }
+
+    select {
+      min-width: 220px;
+      appearance: none;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: white;
+      color: var(--fg);
+      padding: 9px 38px 9px 14px;
+      background-image:
+        linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+        linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+      background-position: calc(100% - 18px) 54%, calc(100% - 12px) 54%;
+      background-size: 6px 6px, 6px 6px;
+      background-repeat: no-repeat;
+    }
+
+    .county-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.08fr) minmax(360px, 0.92fr);
+      gap: 24px;
+      align-items: start;
+      margin-top: 20px;
+    }
+
+    .county-side {
+      display: grid;
+      gap: 14px;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .metric.wide { grid-column: 1 / -1; }
+
+    .insight-box {
+      padding: 18px;
+      border: 1px solid color-mix(in oklch, var(--teal), white 50%);
+      border-radius: 22px;
+      background: linear-gradient(180deg, white, color-mix(in oklch, var(--green-soft), white 40%));
+    }
+
+    .insight-box p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.72;
+    }
+
+    .bar-chart {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: 92px minmax(0, 1fr) 76px;
+      gap: 10px;
+      align-items: center;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .bar-track {
+      height: 16px;
+      border-radius: 999px;
+      background: color-mix(in oklch, var(--border), white 42%);
+      overflow: hidden;
+      border: 1px solid color-mix(in oklch, var(--border), white 10%);
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: inherit;
+      min-width: 2px;
+    }
+
+    .bar-value {
+      text-align: right;
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+    }
+
     .friendly-empty {
       padding: 18px;
       border: 1px dashed color-mix(in oklch, var(--border), var(--muted) 16%);
       border-radius: 18px;
       color: var(--muted);
-      background: var(--surface-soft);
+      background: var(--surface-2);
       font-size: 14px;
     }
 
@@ -750,10 +767,11 @@
       text-align: center;
     }
 
-    @media (max-width: 1280px) {
+    @media (max-width: 1180px) {
       .hero,
-      .dashboard-grid,
-      .viz-grid {
+      .national-layout,
+      .viz-layout,
+      .county-layout {
         grid-template-columns: 1fr;
       }
 
@@ -761,9 +779,7 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
-      .method-card:not(:last-child)::after {
-        display: none;
-      }
+      .method-card:not(:last-child)::after { display: none; }
     }
 
     @media (max-width: 760px) {
@@ -783,8 +799,8 @@
       .hero-copy { min-height: auto; }
 
       .hero-stats,
-      .metric-grid,
-      .method-flow {
+      .method-flow,
+      .metric-grid {
         grid-template-columns: 1fr;
       }
 
@@ -812,14 +828,15 @@
         <div class="brand-mark">GIS</div>
         <div>
           <strong>學校周邊人犬衝突熱區分析展示平台</strong>
-          <span>成果展示・縣市比較・優先關注區</span>
+          <span>成果展示・全臺分析・縣市最終套疊結果</span>
         </div>
       </div>
       <nav class="nav">
         <a href="#overview">平台總覽</a>
-        <a href="#dashboard">互動圖台</a>
-        <a href="#stats">視覺化統計</a>
+        <a href="#national">全臺分析</a>
         <a href="#method">分析方法</a>
+        <a href="#ranking">縣市統計</a>
+        <a href="#county-results">縣市成果</a>
       </nav>
     </header>
 
@@ -829,22 +846,12 @@
           <div class="kicker"><span class="dot"></span> 已完成分析成果展示</div>
           <h1 id="title">學校周邊與人犬衝突熱區的空間重疊分析</h1>
           <p class="subtitle">
-            把學校位置與人犬衝突熱區疊合，找出更需要優先關注的校園周邊區域。本平台展示已完成的空間分析成果，使用者可透過全臺總覽與縣市切換，快速掌握不同地區的空間分布與統計結果。
+            把學校位置與人犬衝突熱區疊合，找出更需要優先關注的校園周邊區域。使用者可先查看全臺分析成果，再往下比較各縣市統計與最終套疊圖。
           </p>
-
-          <div class="modebar" aria-label="主要模式切換">
-            <div class="segmented">
-              <button type="button" class="is-active" data-mode-button="national">全臺總覽</button>
-              <button type="button" data-mode-button="county">縣市分析</button>
-            </div>
-            <select id="heroCountySelect" aria-label="選擇縣市">
-              <option value="">成果準備中…</option>
-            </select>
-          </div>
         </div>
 
         <div>
-          <div class="hero-stats" aria-label="平台重點指標">
+          <div class="hero-stats" aria-label="全臺重點指標">
             <div class="mini">
               <b id="summaryCountyCount">—</b>
               <span>納入比較縣市</span>
@@ -855,180 +862,95 @@
             </div>
             <div class="mini">
               <b id="summaryHighRatio">—</b>
-              <span>高優先區平均比例</span>
+              <span>高優先關注區平均比例</span>
             </div>
           </div>
           <div class="conclusion" id="heroConclusion">
-            本平台以「距離學校越近、熱區強度越高」作為判讀核心，協助將複雜的空間套疊成果轉換成容易理解的圖層、指標與縣市比較。
+            本平台以「距離學校越近、熱區強度越高」作為判讀核心，協助將空間套疊成果轉換為容易理解的圖層、指標與縣市比較。
           </div>
         </div>
       </div>
 
-      <aside class="card hero-map" aria-label="全臺主要分析圖">
+      <aside class="card hero-map" aria-label="全臺主要成果圖">
         <div class="map-title-row">
           <div>
-            <h3 id="heroMapTitle">學校周邊優先性五級</h3>
-            <div class="caption" id="heroMapCaption">同時考量學校距離與熱區強度，形成第 1 級至第 5 級優先關注區。</div>
+            <h3>全臺主要成果圖</h3>
+            <div class="caption">預設顯示學校周邊優先性五級，呈現全臺高優先關注區分布。</div>
           </div>
-          <span class="pill teal" id="heroModePill">全臺總覽</span>
+          <span class="pill teal">全臺總覽</span>
         </div>
 
         <figure class="map-frame hero-taiwan" id="heroMapFrame">
-          <img id="heroMapImg" alt="學校周邊人犬衝突熱區分析圖" />
+          <img id="heroMapImg" alt="全臺主要成果圖" />
           <figcaption class="map-message image-failed">
             <strong>圖片暫時無法顯示</strong>
             請確認成果圖檔是否完整。
           </figcaption>
           <figcaption class="map-message no-result">
-            <strong>目前此縣市尚無完整分析成果</strong>
-            此縣市目前未落於熱區分析範圍內。
+            <strong>目前尚無完整分析成果</strong>
+            此區域暫無可呈現成果。
           </figcaption>
         </figure>
 
         <div class="legend" aria-label="優先關注等級圖例">
           <span class="legend-item"><span class="swatch" style="background:var(--class0)"></span>無套疊值</span>
-          <span class="legend-item"><span class="swatch" style="background:var(--class1)"></span>第 1 級｜低優先</span>
-          <span class="legend-item"><span class="swatch" style="background:var(--class2)"></span>第 2 級｜較低優先</span>
-          <span class="legend-item"><span class="swatch" style="background:var(--class3)"></span>第 3 級｜中度優先</span>
-          <span class="legend-item"><span class="swatch" style="background:var(--class4)"></span>第 4 級｜高度優先</span>
-          <span class="legend-item"><span class="swatch" style="background:var(--class5)"></span>第 5 級｜最高優先</span>
+          <span class="legend-item"><span class="swatch" style="background:var(--class1)"></span>第 1 級</span>
+          <span class="legend-item"><span class="swatch" style="background:var(--class2)"></span>第 2 級</span>
+          <span class="legend-item"><span class="swatch" style="background:var(--class3)"></span>第 3 級</span>
+          <span class="legend-item"><span class="swatch" style="background:var(--class4)"></span>第 4 級</span>
+          <span class="legend-item"><span class="swatch" style="background:var(--class5)"></span>第 5 級</span>
         </div>
       </aside>
     </section>
 
-    <section class="panel" id="dashboard" aria-labelledby="dashboardTitle">
+    <section class="panel" id="national" aria-labelledby="nationalTitle">
       <div class="section-head">
         <div>
-          <h2 id="dashboardTitle">互動圖台</h2>
-          <div class="caption">切換全臺圖層或縣市成果圖，查看學校周邊與人犬衝突熱區的空間重疊情形。</div>
+          <h2 id="nationalTitle">全臺分析成果</h2>
+          <div class="caption">先從全臺成果理解分析邏輯：學校周邊範圍與人犬衝突熱區重疊後，形成不同等級的關注區。</div>
         </div>
-        <div class="modebar" style="margin-top:0">
-          <div class="segmented">
-            <button type="button" class="is-active" data-mode-button="national">全臺總覽</button>
-            <button type="button" data-mode-button="county">縣市分析</button>
-          </div>
-          <select id="countySelect" aria-label="選擇縣市">
-            <option value="">成果準備中…</option>
-          </select>
-        </div>
+        <span class="pill teal">全臺圖層</span>
       </div>
 
-      <div class="dashboard-grid">
-        <aside class="sidebar" aria-label="左側圖層切換">
-          <div class="side-card">
-            <h3>全臺圖層切換</h3>
-            <div class="caption">用不同圖層理解從熱區、學校距離到優先關注區的形成過程。</div>
-            <div class="layer-list" id="layerList"></div>
-          </div>
-
-          <div class="side-card">
-            <h3>判讀重點</h3>
-            <div class="note">
-              第 4、5 級代表較需要優先關注的區域；若這些區域靠近學校周邊，可作為後續巡查、宣導與防治資源配置的討論依據。
-            </div>
-          </div>
+      <div class="national-layout">
+        <aside class="layer-panel">
+          <h3>圖層切換</h3>
+          <div class="caption">切換全臺成果圖不會影響下方縣市選擇。</div>
+          <div class="layer-list" id="nationalLayerList"></div>
         </aside>
 
-        <section class="map-card" aria-label="主要分析圖">
+        <section class="featured-map" aria-label="全臺分析圖">
           <div class="map-title-row">
             <div>
-              <h3 id="mainMapTitle">學校周邊優先性五級</h3>
-              <div class="caption" id="mainMapCaption">同時考量學校距離與熱區強度，形成第 1 級至第 5 級優先關注區。</div>
+              <h3 id="nationalMapTitle">學校周邊優先性五級</h3>
+              <div class="caption" id="nationalMapCaption">同時考量學校距離與熱區強度，形成第 1 級至第 5 級優先關注區。</div>
             </div>
-            <span class="pill teal" id="mainStatusPill">全臺總覽</span>
+            <span class="pill teal">全臺分析</span>
           </div>
 
-          <figure class="map-frame" id="mainMapFrame">
-            <img id="mainMapImg" alt="主要分析圖" />
+          <figure class="map-frame" id="nationalMapFrame">
+            <img id="nationalMapImg" alt="全臺分析圖" />
             <figcaption class="map-message image-failed">
               <strong>圖片暫時無法顯示</strong>
               請確認成果圖檔是否完整。
             </figcaption>
             <figcaption class="map-message no-result">
-              <strong>目前此縣市尚無完整分析成果</strong>
-              此縣市目前未落於熱區分析範圍內。
+              <strong>目前尚無完整分析成果</strong>
+              此圖層暫無可呈現成果。
             </figcaption>
           </figure>
 
-          <div class="note" id="mapNote">
+          <div class="note" id="nationalMapNote">
             目前顯示全臺優先關注區圖層。圖片會維持原始比例呈現，不會拉伸變形。
           </div>
         </section>
-
-        <aside class="right-panel" aria-label="右側圖例與重點解讀">
-          <div class="side-card">
-            <h3>優先關注等級</h3>
-            <div class="legend stack">
-              <span class="legend-item"><span class="swatch" style="background:var(--class0)"></span>無套疊值</span>
-              <span class="legend-item"><span class="swatch" style="background:var(--class1)"></span>第 1 級｜低優先</span>
-              <span class="legend-item"><span class="swatch" style="background:var(--class2)"></span>第 2 級｜較低優先</span>
-              <span class="legend-item"><span class="swatch" style="background:var(--class3)"></span>第 3 級｜中度優先</span>
-              <span class="legend-item"><span class="swatch" style="background:var(--class4)"></span>第 4 級｜高度優先</span>
-              <span class="legend-item"><span class="swatch" style="background:var(--class5)"></span>第 5 級｜最高優先</span>
-            </div>
-          </div>
-
-          <div class="insight-box">
-            <h3>重點解讀</h3>
-            <p id="autoInsight">選擇縣市後，平台會依統計成果產生白話摘要。</p>
-          </div>
-
-          <div class="side-card">
-            <h3 id="metricTitle">縣市統計摘要</h3>
-            <div class="caption" id="metricCaption">切換縣市後同步更新。</div>
-            <div class="metric-grid">
-              <div class="metric"><b id="mSchool">—</b><span>學校點位數</span></div>
-              <div class="metric"><b id="mOverlay">—</b><span>最終套疊面積</span></div>
-              <div class="metric"><b id="mHighArea">—</b><span>高優先區面積</span></div>
-              <div class="metric"><b id="mHighRatio">—</b><span>高優先區比例</span></div>
-              <div class="metric wide"><b id="mOverlayRatio">—</b><span>套疊面積占縣市比例</span></div>
-            </div>
-          </div>
-        </aside>
-      </div>
-    </section>
-
-    <section class="panel" id="stats" aria-labelledby="statsTitle">
-      <div class="section-head">
-        <div>
-          <h2 id="statsTitle">縣市統計視覺化</h2>
-          <div class="caption">以排名、比例與面積視覺化呈現各縣市最終成果，避免直接閱讀原始統計表。</div>
-        </div>
-        <div class="modebar" style="margin-top:0">
-          <label class="caption" for="sortSelect">排名依據</label>
-          <select id="sortSelect">
-            <option value="high_priority_ratio_in_overlay">高優先區比例</option>
-            <option value="high_priority_area_km2_class4_5">高優先區面積</option>
-            <option value="overlay_area_km2_total_class1_5">最終套疊面積</option>
-            <option value="school_count">學校點位數</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="viz-grid">
-        <div class="side-card">
-          <h3>縣市排名前 10 名</h3>
-          <div class="caption">點選縣市可同步更新圖台、指標卡與重點解讀。</div>
-          <div class="ranking-list" id="rankingList">
-            <div class="friendly-empty">目前統計資料暫時無法顯示，請確認資料檔案已放置於指定資料夾。</div>
-          </div>
-        </div>
-
-        <div class="side-card">
-          <h3 id="classChartTitle">優先等級面積圖</h3>
-          <div class="caption">僅呈現第 1～5 級，讓使用者聚焦於實際優先關注區。</div>
-          <div class="bar-chart" id="classChart">
-            <div class="friendly-empty">選擇縣市後顯示優先等級面積。</div>
-          </div>
-          <div class="note">第 0 級代表「無套疊值」或未落入學校周邊熱區範圍，已保留於圖例說明，不放入主要圖表以避免干擾判讀。</div>
-        </div>
       </div>
     </section>
 
     <section class="panel" id="method" aria-labelledby="methodTitle">
       <div class="section-head">
         <div>
-          <h2 id="methodTitle">分析方法：五步驟視覺流程</h2>
+          <h2 id="methodTitle">全臺分析方法：五步驟視覺流程</h2>
           <div class="caption">用白話方式理解成果如何產生：從學校位置，到熱區疊合，再到縣市成果呈現。</div>
         </div>
       </div>
@@ -1062,112 +984,166 @@
       </div>
     </section>
 
+    <section class="panel" id="ranking" aria-labelledby="rankingTitle">
+      <div class="section-head">
+        <div>
+          <h2 id="rankingTitle">縣市統計視覺化</h2>
+          <div class="caption">顯示縣市排名前 10 名。點選縣市只會更新下方「各縣市最終套疊結果」，不會影響上方全臺圖層。</div>
+        </div>
+        <div class="control-row">
+          <label class="caption" for="sortSelect">排名依據</label>
+          <select id="sortSelect">
+            <option value="high_priority_ratio_in_overlay">高優先關注區比例</option>
+            <option value="high_priority_area_km2_class4_5">高優先關注區面積</option>
+            <option value="overlay_area_km2_total_class1_5">最終套疊面積</option>
+            <option value="school_count">學校點位數</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="viz-layout">
+        <div>
+          <h3>縣市排名前 10 名</h3>
+          <div class="ranking-list" id="rankingList">
+            <div class="friendly-empty">目前統計資料暫時無法顯示，請確認資料檔案已放置於指定資料夾。</div>
+          </div>
+        </div>
+
+        <aside class="soft-card" style="padding:22px">
+          <h3>排名判讀</h3>
+          <div class="note">
+            排名用來快速找出高優先關注區比例或面積較高的縣市。比例高代表套疊區內有較大比例落在第 4、5 級；面積高則代表實際需要關注的空間範圍較大。
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="panel" id="county-results" aria-labelledby="countyTitle">
+      <div class="section-head">
+        <div>
+          <h2 id="countyTitle">各縣市最終套疊結果</h2>
+          <div class="caption">此區塊只處理縣市成果：縣市 PNG、指標卡、優先等級面積圖與重點解讀。</div>
+        </div>
+        <div class="control-row">
+          <label class="caption" for="countySelect">選擇縣市</label>
+          <select id="countySelect">
+            <option value="">成果準備中…</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="county-layout">
+        <section class="county-map-card" aria-label="縣市最終套疊結果圖">
+          <div class="map-title-row">
+            <div>
+              <h3 id="countyMapTitle">縣市最終套疊結果</h3>
+              <div class="caption" id="countyMapCaption">選擇縣市後顯示該縣市最終套疊結果。</div>
+            </div>
+            <span class="pill teal" id="countyStatusPill">縣市成果</span>
+          </div>
+
+          <figure class="map-frame" id="countyMapFrame">
+            <img id="countyMapImg" alt="縣市最終套疊結果圖" />
+            <figcaption class="map-message image-failed">
+              <strong>圖片暫時無法顯示</strong>
+              請確認成果圖檔是否完整。
+            </figcaption>
+            <figcaption class="map-message no-result">
+              <strong>目前此縣市尚無完整分析成果</strong>
+              此縣市目前未落於熱區分析範圍內。
+            </figcaption>
+          </figure>
+
+          <div class="note" id="countyMapNote">
+            縣市成果圖會維持原始比例呈現；圖中已包含縣市範圍細框線，頁面不會額外加框。
+          </div>
+        </section>
+
+        <aside class="county-side">
+          <div class="soft-card" style="padding:18px">
+            <h3 id="metricTitle">縣市統計摘要</h3>
+            <div class="caption" id="metricCaption">切換縣市後同步更新。</div>
+            <div class="metric-grid">
+              <div class="metric"><b id="mSchool">—</b><span>學校點位數</span></div>
+              <div class="metric"><b id="mOverlay">—</b><span>最終套疊面積</span></div>
+              <div class="metric"><b id="mHighArea">—</b><span>高優先關注區面積</span></div>
+              <div class="metric"><b id="mHighRatio">—</b><span>高優先關注區比例</span></div>
+              <div class="metric wide"><b id="mOverlayRatio">—</b><span>套疊面積占縣市比例</span></div>
+            </div>
+          </div>
+
+          <div class="insight-box">
+            <h3>縣市重點解讀</h3>
+            <p id="autoInsight">選擇縣市後，平台會依統計成果產生白話摘要。</p>
+          </div>
+
+          <div class="soft-card" style="padding:18px">
+            <h3 id="classChartTitle">優先等級面積圖</h3>
+            <div class="caption">僅呈現第 1～5 級，讓使用者聚焦於實際優先關注區。</div>
+            <div class="bar-chart" id="classChart">
+              <div class="friendly-empty">選擇縣市後顯示優先等級面積。</div>
+            </div>
+            <div class="note">第 0 級代表「無套疊值」或未落入學校周邊熱區範圍，已保留於圖例說明，不放入主要圖表。</div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
     <footer class="footer">
-      學校周邊人犬衝突熱區分析展示平台｜成果展示版｜全臺圖層・縣市比較・統計摘要・重點解讀
+      學校周邊人犬衝突熱區分析展示平台｜成果展示版｜全臺分析・縣市統計・各縣市最終套疊結果
     </footer>
   </main>
 
-  <script id="embedded-data" type="application/json">{"summary":[{"COUNTYNAME":"連江縣","COUNTYID":"Z","COUNTYCODE":"09007","school_count":"2","coverage_status":"outside_raster","county_area_km2_geom":"29.735032323048667","county_area_km2_raster_mask":"0.0","overlay_area_km2_total_class1_5":"0.0","overlay_area_ratio_in_county":"","high_priority_area_km2_class4_5":"0.0","high_priority_ratio_in_overlay":"","class0_area_km2":"","class1_area_km2":"","class2_area_km2":"","class3_area_km2":"","class4_area_km2":"","class5_area_km2":"","tif_path":"","png_path":""},{"COUNTYNAME":"宜蘭縣","COUNTYID":"G","COUNTYCODE":"10002","school_count":"133","coverage_status":"ok","county_area_km2_geom":"2201.4504087243513","county_area_km2_raster_mask":"258.11","overlay_area_km2_total_class1_5":"258.11","overlay_area_ratio_in_county":"0.11724543009331925","high_priority_area_km2_class4_5":"29.07","high_priority_ratio_in_overlay":"0.112626399597071","class0_area_km2":"0.0","class1_area_km2":"10.35","class2_area_km2":"173.14000000000001","class3_area_km2":"45.550000000000004","class4_area_km2":"26.62","class5_area_km2":"2.45","tif_path":"county_final/rasters/宜蘭縣_school_heat_priority_5class_within1000m.tif","png_path":"county_final/png/宜蘭縣_school_heat_priority_5class_within1000m.png"},{"COUNTYNAME":"彰化縣","COUNTYID":"N","COUNTYCODE":"10007","school_count":"249","coverage_status":"ok","county_area_km2_geom":"1244.545704357776","county_area_km2_raster_mask":"512.5","overlay_area_km2_total_class1_5":"512.5","overlay_area_ratio_in_county":"0.4117968494089703","high_priority_area_km2_class4_5":"64.60000000000001","high_priority_ratio_in_overlay":"0.1260487804878049","class0_area_km2":"0.0","class1_area_km2":"0.0","class2_area_km2":"349.53000000000003","class3_area_km2":"98.37","class4_area_km2":"57.27","class5_area_km2":"7.33","tif_path":"county_final/rasters/彰化縣_school_heat_priority_5class_within1000m.tif","png_path":"county_final/png/彰化縣_school_heat_priority_5class_within1000m.png"},{"COUNTYNAME":"南投縣","COUNTYID":"M","COUNTYCODE":"10008","school_count":"207","coverage_status":"ok","county_area_km2_geom":"4097.729913764787","county_area_km2_raster_mask":"433.82","overlay_area_km2_total_class1_5":"433.82","overlay_area_ratio_in_county":"0.1058683732528941","high_priority_area_km2_class4_5":"19.35","high_priority_ratio_in_overlay":"0.04460375270849661","class0_area_km2":"0.0","class1_area_km2":"87.64","class2_area_km2":"277.86","class3_area_km2":"48.97","class4_area_km2":"18.02","class5_area_km2":"1.33","tif_path":"county_final/rasters/南投縣_school_heat_priority_5class_within1000m.tif","png_path":"county_final/png/南投縣_school_heat_priority_5class_within1000m.png"},{"COUNTYNAME":"雲林縣","COUNTYID":"P","COUNTYCODE":"10009","school_count":"233","coverage_status":"ok","county_area_km2_geom":"1399.5681864432677","county_area_km2_raster_mask":"518.46","overlay_area_km2_total_class1_5":"518.46","overlay_area_ratio_in_county":"0.3704428301686151","high_priority_area_km2_class4_5":"55.14","high_priority_ratio_in_overlay":"0.10635343131581992","class0_area_km2":"0.0","class1_area_km2":"4.26","class2_area_km2":"368.14","class3_area_km2":"90.92","class4_area_km2":"52.13","class5_area_km2":"3.0100000000000002","tif_path":"county_final/rasters/雲林縣_school_heat_priority_5class_within1000m.tif","png_path":"county_final/png/雲林縣_school_heat_priority_5class_within1000m.png"},{"COUNTYNAME":"屏東縣","COUNTYID":"T","COUNTYCODE":"10013","school_count":"248","coverage_status":"ok","county_area_km2_geom":"2805.0367554745744","county_area_km2_raster_mask":"529.8","overlay_area_km2_total_class1_5":"529.8","overlay_area_ratio_in_county":"0.1888745304196076","high_priority_area_km2_class4_5":"48.82","high_priority_ratio_in_overlay":"0.09214798036995094","class0_area_km2":"0.0","class1_area_km2":"34.56","class2_area_km2":"362.36","class3_area_km2":"84.06","class4_area_km2":"46.1","class5_area_km2":"2.72","tif_path":"county_final/rasters/屏東縣_school_heat_priority_5class_within1000m.tif","png_path":"county_final/png/屏東縣_school_heat_priority_5class_within1000m.png"},{"COUNTYNAME":"基隆市","COUNTYID":"C","COUNTYCODE":"10017","school_count":"72","coverage_status":"ok","county_area_km2_geom":"137.5702673707708","county_area_km2_raster_mask":"73.29","overlay_area_km2_total_class1_5":"73.29","overlay_area_ratio_in_county":"0.5327459297761875","high_priority_area_km2_class4_5":"15.78","high_priority_ratio_in_overlay":"0.21530904625460498","class0_area_km2":"0.0","class1_area_km2":"0.0","class2_area_km2":"39.480000000000004","class3_area_km2":"18.03","class4_area_km2":"13.6","class5_area_km2":"2.18","tif_path":"county_final/rasters/基隆市_school_heat_priority_5class_within1000m.tif","png_path":"county_final/png/基隆市_school_heat_priority_5class_within1000m.png"},{"COUNTYNAME":"臺北市","COUNTYID":"A","COUNTYCODE":"63000","school_count":"359","coverage_status":"ok","county_area_km2_geom":"269.84777252378063","county_area_km2_raster_mask":"193.34","overlay_area_km2_total_class1_5":"193.34","overlay_area_ratio_in_county":"0.7164780283037604","high_priority_area_km2_class4_5":"68.62","high_priority_ratio_in_overlay":"0.35491879590358955","class0_area_km2":"0.0","class1_area_km2":"0.0","class2_area_km2":"71.24","class3_area_km2":"53.480000000000004","class4_area_km2":"57.83","class5_area_km2":"10.790000000000001","tif_path":"county_final/rasters/臺北市_school_heat_priority_5class_within1000m.tif","png_path":"county_final/png/臺北市_school_heat_priority_5class_within1000m.png"},{"COUNTYNAME":"新北市","COUNTYID":"F","COUNTYCODE":"65000","school_count":"393","coverage_status":"ok","county_area_km2_geom":"2066.2625748141118","county_area_km2_raster_mask":"514.0","overlay_area_km2_total_class1_5":"514.0","overlay_area_ratio_in_county":"0.24875831671405133","high_priority_area_km2_class4_5":"86.53","high_priority_ratio_in_overlay":"0.16834630350194552","class0_area_km2":"0.0","class1_area_km2":"1.7","class2_area_km2":"314.37","class3_area_km2":"111.4","class4_area_km2":"76.48","class5_area_km2":"10.05","tif_path":"county_final/rasters/新北市_school_heat_priority_5class_within1000m.tif","png_path":"county_final/png/新北市_school_heat_priority_5class_within1000m.png"},{"COUNTYNAME":"臺南市","COUNTYID":"D","COUNTYCODE":"67000","school_count":"371","coverage_status":"ok","county_area_km2_geom":"2258.786646473204","county_area_km2_raster_mask":"672.16","overlay_area_km2_total_class1_5":"672.16","overlay_area_ratio_in_county":"0.2975756922635826","high_priority_area_km2_class4_5":"88.62","high_priority_ratio_in_overlay":"0.13184360866460368","class0_area_km2":"0.0","class1_area_km2":"3.77","class2_area_km2":"448.81","class3_area_km2":"130.96","class4_area_km2":"78.92","class5_area_km2":"9.700000000000001","tif_path":"county_final/rasters/臺南市_school_heat_priority_5class_within1000m.tif","png_path":"county_final/png/臺南市_school_heat_priority_5class_within1000m.png"},{"COUNTYNAME":"桃園市","COUNTYID":"H","COUNTYCODE":"68000","school_count":"308","coverage_status":"ok","county_area_km2_geom":"1217.2210398474836","county_area_km2_raster_mask":"496.42","overlay_area_km2_total_class1_5":"496.42","overlay_area_ratio_in_county":"0.40783061066887316","high_priority_area_km2_class4_5":"74.21","high_priority_ratio_in_overlay":"0.14949035091253374","class0_area_km2":"0.0","class1_area_km2":"13.21","class2_area_km2":"308.67","class3_area_km2":"100.33","class4_area_km2":"66.24","class5_area_km2":"7.97","tif_path":"county_final/rasters/桃園市_school_heat_priority_5class_within1000m.tif","png_path":"county_final/png/桃園市_school_heat_priority_5class_within1000m.png"},{"COUNTYNAME":"嘉義市","COUNTYID":"I","COUNTYCODE":"10020","school_count":"49","coverage_status":"ok","county_area_km2_geom":"59.72155146256911","county_area_km2_raster_mask":"44.1","overlay_area_km2_total_class1_5":"44.1","overlay_area_ratio_in_county":"0.7384268981632196","high_priority_area_km2_class4_5":"10.84","high_priority_ratio_in_overlay":"0.24580498866213152","class0_area_km2":"0.0","class1_area_km2":"0.0","class2_area_km2":"21.86","class3_area_km2":"11.4","class4_area_km2":"9.26","class5_area_km2":"1.58","tif_path":"county_final/rasters/嘉義市_school_heat_priority_5class_within1000m.tif","png_path":"county_final/png/嘉義市_school_heat_priority_5class_within1000m.png"},{"COUNTYNAME":"嘉義縣","COUNTYID":"Q","COUNTYCODE":"10010","school_count":"172","coverage_status":"ok","county_area_km2_geom":"1952.750456219499","county_area_km2_raster_mask":"426.99","overlay_area_km2_total_class1_5":"426.99","overlay_area_ratio_in_county":"0.2186608118001147","high_priority_area_km2_class4_5":"32.18","high_priority_ratio_in_overlay":"0.07536476264081125","class0_area_km2":"0.0","class1_area_km2":"43.800000000000004","class2_area_km2":"290.90000000000003","class3_area_km2":"60.11","class4_area_km2":"30.95","class5_area_km2":"1.23","tif_path":"county_final/rasters/嘉義縣_school_heat_priority_5class_within1000m.tif","png_path":"county_final/png/嘉義縣_school_heat_priority_5class_within1000m.png"},{"COUNTYNAME":"金門縣","COUNTYID":"W","COUNTYCODE":"09020","school_count":"0","coverage_status":"ok","county_area_km2_geom":"185.0311079967785","county_area_km2_raster_mask":"0.0","overlay_area_km2_total_class1_5":"0.0","overlay_area_ratio_in_county":"0.0","high_priority_area_km2_class4_5":"0.0","high_priority_ratio_in_overlay":"","class0_area_km2":"0.0","class1_area_km2":"0.0","class2_area_km2":"0.0","class3_area_km2":"0.0","class4_area_km2":"0.0","class5_area_km2":"0.0","tif_path":"county_final/rasters/金門縣_school_heat_priority_5class_within1000m.tif","png_path":"county_final/png/金門縣_school_heat_priority_5class_within1000m.png"},{"COUNTYNAME":"高雄市","COUNTYID":"E","COUNTYCODE":"64000","school_count":"420","coverage_status":"ok","county_area_km2_geom":"2998.4883053316876","county_area_km2_raster_mask":"609.04","overlay_area_km2_total_class1_5":"609.04","overlay_area_ratio_in_county":"0.20311568296499627","high_priority_area_km2_class4_5":"89.78","high_priority_ratio_in_overlay":"0.14741232102981744","class0_area_km2":"0.0","class1_area_km2":"44.17","class2_area_km2":"354.08","class3_area_km2":"121.01","class4_area_km2":"80.73","class5_area_km2":"9.05","tif_path":"county_final/rasters/高雄市_school_heat_priority_5class_within1000m.tif","png_path":"county_final/png/高雄市_school_heat_priority_5class_within1000m.png"},{"COUNTYNAME":"臺東縣","COUNTYID":"V","COUNTYCODE":"10014","school_count":"144","coverage_status":"ok","county_area_km2_geom":"3582.21091690537","county_area_km2_raster_mask":"284.94","overlay_area_km2_total_class1_5":"284.94","overlay_area_ratio_in_county":"0.07954305500418617","high_priority_area_km2_class4_5":"20.27","high_priority_ratio_in_overlay":"0.07113778339299502","class0_area_km2":"0.0","class1_area_km2":"37.27","class2_area_km2":"189.47","class3_area_km2":"37.93","class4_area_km2":"18.96","class5_area_km2":"1.31","tif_path":"county_final/rasters/臺東縣_school_heat_priority_5class_within1000m.tif","png_path":"county_final/png/臺東縣_school_heat_priority_5class_within1000m.png"},{"COUNTYNAME":"花蓮縣","COUNTYID":"U","COUNTYCODE":"10015","school_count":"153","coverage_status":"ok","county_area_km2_geom":"4605.284306394628","county_area_km2_raster_mask":"304.90000000000003","overlay_area_km2_total_class1_5":"304.90000000000003","overlay_area_ratio_in_county":"0.06620655310609895","high_priority_area_km2_class4_5":"17.77","high_priority_ratio_in_overlay":"0.05828140373893079","class0_area_km2":"0.0","class1_area_km2":"64.39","class2_area_km2":"187.57","class3_area_km2":"35.17","class4_area_km2":"16.28","class5_area_km2":"1.49","tif_path":"county_final/rasters/花蓮縣_school_heat_priority_5class_within1000m.tif","png_path":"county_final/png/花蓮縣_school_heat_priority_5class_within1000m.png"},{"COUNTYNAME":"澎湖縣","COUNTYID":"X","COUNTYCODE":"10016","school_count":"0","coverage_status":"ok","county_area_km2_geom":"135.22387062731275","county_area_km2_raster_mask":"0.0","overlay_area_km2_total_class1_5":"0.0","overlay_area_ratio_in_county":"0.0","high_priority_area_km2_class4_5":"0.0","high_priority_ratio_in_overlay":"","class0_area_km2":"0.0","class1_area_km2":"0.0","class2_area_km2":"0.0","class3_area_km2":"0.0","class4_area_km2":"0.0","class5_area_km2":"0.0","tif_path":"county_final/rasters/澎湖縣_school_heat_priority_5class_within1000m.tif","png_path":"county_final/png/澎湖縣_school_heat_priority_5class_within1000m.png"},{"COUNTYNAME":"新竹市","COUNTYID":"O","COUNTYCODE":"10018","school_count":"72","coverage_status":"ok","county_area_km2_geom":"124.43876140114183","county_area_km2_raster_mask":"79.17","overlay_area_km2_total_class1_5":"79.17","overlay_area_ratio_in_county":"0.6362165543000459","high_priority_area_km2_class4_5":"16.04","high_priority_ratio_in_overlay":"0.20260199570544396","class0_area_km2":"0.0","class1_area_km2":"0.0","class2_area_km2":"44.32","class3_area_km2":"18.81","class4_area_km2":"14.01","class5_area_km2":"2.0300000000000002","tif_path":"county_final/rasters/新竹市_school_heat_priority_5class_within1000m.tif","png_path":"county_final/png/新竹市_school_heat_priority_5class_within1000m.png"},{"COUNTYNAME":"臺中市","COUNTYID":"B","COUNTYCODE":"66000","school_count":"418","coverage_status":"ok","county_area_km2_geom":"2239.684439573994","county_area_km2_raster_mask":"591.67","overlay_area_km2_total_class1_5":"591.67","overlay_area_ratio_in_county":"0.2641756086462521","high_priority_area_km2_class4_5":"96.95","high_priority_ratio_in_overlay":"0.16385823178460968","class0_area_km2":"0.0","class1_area_km2":"16.53","class2_area_km2":"347.47","class3_area_km2":"130.72","class4_area_km2":"86.46000000000001","class5_area_km2":"10.49","tif_path":"county_final/rasters/臺中市_school_heat_priority_5class_within1000m.tif","png_path":"county_final/png/臺中市_school_heat_priority_5class_within1000m.png"},{"COUNTYNAME":"苗栗縣","COUNTYID":"K","COUNTYCODE":"10005","school_count":"179","coverage_status":"ok","county_area_km2_geom":"1826.7514530792116","county_area_km2_raster_mask":"367.06","overlay_area_km2_total_class1_5":"367.06","overlay_area_ratio_in_county":"0.20093592884859937","high_priority_area_km2_class4_5":"24.8","high_priority_ratio_in_overlay":"0.06756388601318586","class0_area_km2":"0.0","class1_area_km2":"51.97","class2_area_km2":"241.44","class3_area_km2":"48.85","class4_area_km2":"23.650000000000002","class5_area_km2":"1.1500000000000001","tif_path":"county_final/rasters/苗栗縣_school_heat_priority_5class_within1000m.tif","png_path":"county_final/png/苗栗縣_school_heat_priority_5class_within1000m.png"},{"COUNTYNAME":"新竹縣","COUNTYID":"J","COUNTYCODE":"10004","school_count":"149","coverage_status":"ok","county_area_km2_geom":"1411.5208351350345","county_area_km2_raster_mask":"280.13","overlay_area_km2_total_class1_5":"280.13","overlay_area_ratio_in_county":"0.19845969894819235","high_priority_area_km2_class4_5":"33.269999999999996","high_priority_ratio_in_overlay":"0.1187662870809981","class0_area_km2":"0.0","class1_area_km2":"18.43","class2_area_km2":"179.35","class3_area_km2":"49.08","class4_area_km2":"29.93","class5_area_km2":"3.34","tif_path":"county_final/rasters/新竹縣_school_heat_priority_5class_within1000m.tif","png_path":"county_final/png/新竹縣_school_heat_priority_5class_within1000m.png"}],"classLong":[{"COUNTYNAME":"宜蘭縣","priority_class":"0","cell_count":"0","area_km2":"0.0"},{"COUNTYNAME":"宜蘭縣","priority_class":"1","cell_count":"1035","area_km2":"10.35"},{"COUNTYNAME":"宜蘭縣","priority_class":"2","cell_count":"17314","area_km2":"173.14000000000001"},{"COUNTYNAME":"宜蘭縣","priority_class":"3","cell_count":"4555","area_km2":"45.550000000000004"},{"COUNTYNAME":"宜蘭縣","priority_class":"4","cell_count":"2662","area_km2":"26.62"},{"COUNTYNAME":"宜蘭縣","priority_class":"5","cell_count":"245","area_km2":"2.45"},{"COUNTYNAME":"彰化縣","priority_class":"0","cell_count":"0","area_km2":"0.0"},{"COUNTYNAME":"彰化縣","priority_class":"1","cell_count":"0","area_km2":"0.0"},{"COUNTYNAME":"彰化縣","priority_class":"2","cell_count":"34953","area_km2":"349.53000000000003"},{"COUNTYNAME":"彰化縣","priority_class":"3","cell_count":"9837","area_km2":"98.37"},{"COUNTYNAME":"彰化縣","priority_class":"4","cell_count":"5727","area_km2":"57.27"},{"COUNTYNAME":"彰化縣","priority_class":"5","cell_count":"733","area_km2":"7.33"},{"COUNTYNAME":"南投縣","priority_class":"0","cell_count":"0","area_km2":"0.0"},{"COUNTYNAME":"南投縣","priority_class":"1","cell_count":"8764","area_km2":"87.64"},{"COUNTYNAME":"南投縣","priority_class":"2","cell_count":"27786","area_km2":"277.86"},{"COUNTYNAME":"南投縣","priority_class":"3","cell_count":"4897","area_km2":"48.97"},{"COUNTYNAME":"南投縣","priority_class":"4","cell_count":"1802","area_km2":"18.02"},{"COUNTYNAME":"南投縣","priority_class":"5","cell_count":"133","area_km2":"1.33"},{"COUNTYNAME":"雲林縣","priority_class":"0","cell_count":"0","area_km2":"0.0"},{"COUNTYNAME":"雲林縣","priority_class":"1","cell_count":"426","area_km2":"4.26"},{"COUNTYNAME":"雲林縣","priority_class":"2","cell_count":"36814","area_km2":"368.14"},{"COUNTYNAME":"雲林縣","priority_class":"3","cell_count":"9092","area_km2":"90.92"},{"COUNTYNAME":"雲林縣","priority_class":"4","cell_count":"5213","area_km2":"52.13"},{"COUNTYNAME":"雲林縣","priority_class":"5","cell_count":"301","area_km2":"3.0100000000000002"},{"COUNTYNAME":"屏東縣","priority_class":"0","cell_count":"0","area_km2":"0.0"},{"COUNTYNAME":"屏東縣","priority_class":"1","cell_count":"3456","area_km2":"34.56"},{"COUNTYNAME":"屏東縣","priority_class":"2","cell_count":"36236","area_km2":"362.36"},{"COUNTYNAME":"屏東縣","priority_class":"3","cell_count":"8406","area_km2":"84.06"},{"COUNTYNAME":"屏東縣","priority_class":"4","cell_count":"4610","area_km2":"46.1"},{"COUNTYNAME":"屏東縣","priority_class":"5","cell_count":"272","area_km2":"2.72"},{"COUNTYNAME":"基隆市","priority_class":"0","cell_count":"0","area_km2":"0.0"},{"COUNTYNAME":"基隆市","priority_class":"1","cell_count":"0","area_km2":"0.0"},{"COUNTYNAME":"基隆市","priority_class":"2","cell_count":"3948","area_km2":"39.480000000000004"},{"COUNTYNAME":"基隆市","priority_class":"3","cell_count":"1803","area_km2":"18.03"},{"COUNTYNAME":"基隆市","priority_class":"4","cell_count":"1360","area_km2":"13.6"},{"COUNTYNAME":"基隆市","priority_class":"5","cell_count":"218","area_km2":"2.18"},{"COUNTYNAME":"臺北市","priority_class":"0","cell_count":"0","area_km2":"0.0"},{"COUNTYNAME":"臺北市","priority_class":"1","cell_count":"0","area_km2":"0.0"},{"COUNTYNAME":"臺北市","priority_class":"2","cell_count":"7124","area_km2":"71.24"},{"COUNTYNAME":"臺北市","priority_class":"3","cell_count":"5348","area_km2":"53.480000000000004"},{"COUNTYNAME":"臺北市","priority_class":"4","cell_count":"5783","area_km2":"57.83"},{"COUNTYNAME":"臺北市","priority_class":"5","cell_count":"1079","area_km2":"10.790000000000001"},{"COUNTYNAME":"新北市","priority_class":"0","cell_count":"0","area_km2":"0.0"},{"COUNTYNAME":"新北市","priority_class":"1","cell_count":"170","area_km2":"1.7"},{"COUNTYNAME":"新北市","priority_class":"2","cell_count":"31437","area_km2":"314.37"},{"COUNTYNAME":"新北市","priority_class":"3","cell_count":"11140","area_km2":"111.4"},{"COUNTYNAME":"新北市","priority_class":"4","cell_count":"7648","area_km2":"76.48"},{"COUNTYNAME":"新北市","priority_class":"5","cell_count":"1005","area_km2":"10.05"},{"COUNTYNAME":"臺南市","priority_class":"0","cell_count":"0","area_km2":"0.0"},{"COUNTYNAME":"臺南市","priority_class":"1","cell_count":"377","area_km2":"3.77"},{"COUNTYNAME":"臺南市","priority_class":"2","cell_count":"44881","area_km2":"448.81"},{"COUNTYNAME":"臺南市","priority_class":"3","cell_count":"13096","area_km2":"130.96"},{"COUNTYNAME":"臺南市","priority_class":"4","cell_count":"7892","area_km2":"78.92"},{"COUNTYNAME":"臺南市","priority_class":"5","cell_count":"970","area_km2":"9.700000000000001"},{"COUNTYNAME":"桃園市","priority_class":"0","cell_count":"0","area_km2":"0.0"},{"COUNTYNAME":"桃園市","priority_class":"1","cell_count":"1321","area_km2":"13.21"},{"COUNTYNAME":"桃園市","priority_class":"2","cell_count":"30867","area_km2":"308.67"},{"COUNTYNAME":"桃園市","priority_class":"3","cell_count":"10033","area_km2":"100.33"},{"COUNTYNAME":"桃園市","priority_class":"4","cell_count":"6624","area_km2":"66.24"},{"COUNTYNAME":"桃園市","priority_class":"5","cell_count":"797","area_km2":"7.97"},{"COUNTYNAME":"嘉義市","priority_class":"0","cell_count":"0","area_km2":"0.0"},{"COUNTYNAME":"嘉義市","priority_class":"1","cell_count":"0","area_km2":"0.0"},{"COUNTYNAME":"嘉義市","priority_class":"2","cell_count":"2186","area_km2":"21.86"},{"COUNTYNAME":"嘉義市","priority_class":"3","cell_count":"1140","area_km2":"11.4"},{"COUNTYNAME":"嘉義市","priority_class":"4","cell_count":"926","area_km2":"9.26"},{"COUNTYNAME":"嘉義市","priority_class":"5","cell_count":"158","area_km2":"1.58"},{"COUNTYNAME":"嘉義縣","priority_class":"0","cell_count":"0","area_km2":"0.0"},{"COUNTYNAME":"嘉義縣","priority_class":"1","cell_count":"4380","area_km2":"43.800000000000004"},{"COUNTYNAME":"嘉義縣","priority_class":"2","cell_count":"29090","area_km2":"290.90000000000003"},{"COUNTYNAME":"嘉義縣","priority_class":"3","cell_count":"6011","area_km2":"60.11"},{"COUNTYNAME":"嘉義縣","priority_class":"4","cell_count":"3095","area_km2":"30.95"},{"COUNTYNAME":"嘉義縣","priority_class":"5","cell_count":"123","area_km2":"1.23"},{"COUNTYNAME":"金門縣","priority_class":"0","cell_count":"0","area_km2":"0.0"},{"COUNTYNAME":"金門縣","priority_class":"1","cell_count":"0","area_km2":"0.0"},{"COUNTYNAME":"金門縣","priority_class":"2","cell_count":"0","area_km2":"0.0"},{"COUNTYNAME":"金門縣","priority_class":"3","cell_count":"0","area_km2":"0.0"},{"COUNTYNAME":"金門縣","priority_class":"4","cell_count":"0","area_km2":"0.0"},{"COUNTYNAME":"金門縣","priority_class":"5","cell_count":"0","area_km2":"0.0"},{"COUNTYNAME":"高雄市","priority_class":"0","cell_count":"0","area_km2":"0.0"},{"COUNTYNAME":"高雄市","priority_class":"1","cell_count":"4417","area_km2":"44.17"},{"COUNTYNAME":"高雄市","priority_class":"2","cell_count":"35408","area_km2":"354.08"},{"COUNTYNAME":"高雄市","priority_class":"3","cell_count":"12101","area_km2":"121.01"},{"COUNTYNAME":"高雄市","priority_class":"4","cell_count":"8073","area_km2":"80.73"},{"COUNTYNAME":"高雄市","priority_class":"5","cell_count":"905","area_km2":"9.05"},{"COUNTYNAME":"臺東縣","priority_class":"0","cell_count":"0","area_km2":"0.0"},{"COUNTYNAME":"臺東縣","priority_class":"1","cell_count":"3727","area_km2":"37.27"},{"COUNTYNAME":"臺東縣","priority_class":"2","cell_count":"18947","area_km2":"189.47"},{"COUNTYNAME":"臺東縣","priority_class":"3","cell_count":"3793","area_km2":"37.93"},{"COUNTYNAME":"臺東縣","priority_class":"4","cell_count":"1896","area_km2":"18.96"},{"COUNTYNAME":"臺東縣","priority_class":"5","cell_count":"131","area_km2":"1.31"},{"COUNTYNAME":"花蓮縣","priority_class":"0","cell_count":"0","area_km2":"0.0"},{"COUNTYNAME":"花蓮縣","priority_class":"1","cell_count":"6439","area_km2":"64.39"},{"COUNTYNAME":"花蓮縣","priority_class":"2","cell_count":"18757","area_km2":"187.57"},{"COUNTYNAME":"花蓮縣","priority_class":"3","cell_count":"3517","area_km2":"35.17"},{"COUNTYNAME":"花蓮縣","priority_class":"4","cell_count":"1628","area_km2":"16.28"},{"COUNTYNAME":"花蓮縣","priority_class":"5","cell_count":"149","area_km2":"1.49"},{"COUNTYNAME":"澎湖縣","priority_class":"0","cell_count":"0","area_km2":"0.0"},{"COUNTYNAME":"澎湖縣","priority_class":"1","cell_count":"0","area_km2":"0.0"},{"COUNTYNAME":"澎湖縣","priority_class":"2","cell_count":"0","area_km2":"0.0"},{"COUNTYNAME":"澎湖縣","priority_class":"3","cell_count":"0","area_km2":"0.0"},{"COUNTYNAME":"澎湖縣","priority_class":"4","cell_count":"0","area_km2":"0.0"},{"COUNTYNAME":"澎湖縣","priority_class":"5","cell_count":"0","area_km2":"0.0"},{"COUNTYNAME":"新竹市","priority_class":"0","cell_count":"0","area_km2":"0.0"},{"COUNTYNAME":"新竹市","priority_class":"1","cell_count":"0","area_km2":"0.0"},{"COUNTYNAME":"新竹市","priority_class":"2","cell_count":"4432","area_km2":"44.32"},{"COUNTYNAME":"新竹市","priority_class":"3","cell_count":"1881","area_km2":"18.81"},{"COUNTYNAME":"新竹市","priority_class":"4","cell_count":"1401","area_km2":"14.01"},{"COUNTYNAME":"新竹市","priority_class":"5","cell_count":"203","area_km2":"2.0300000000000002"},{"COUNTYNAME":"臺中市","priority_class":"0","cell_count":"0","area_km2":"0.0"},{"COUNTYNAME":"臺中市","priority_class":"1","cell_count":"1653","area_km2":"16.53"},{"COUNTYNAME":"臺中市","priority_class":"2","cell_count":"34747","area_km2":"347.47"},{"COUNTYNAME":"臺中市","priority_class":"3","cell_count":"13072","area_km2":"130.72"},{"COUNTYNAME":"臺中市","priority_class":"4","cell_count":"8646","area_km2":"86.46000000000001"},{"COUNTYNAME":"臺中市","priority_class":"5","cell_count":"1049","area_km2":"10.49"},{"COUNTYNAME":"苗栗縣","priority_class":"0","cell_count":"0","area_km2":"0.0"},{"COUNTYNAME":"苗栗縣","priority_class":"1","cell_count":"5197","area_km2":"51.97"},{"COUNTYNAME":"苗栗縣","priority_class":"2","cell_count":"24144","area_km2":"241.44"},{"COUNTYNAME":"苗栗縣","priority_class":"3","cell_count":"4885","area_km2":"48.85"},{"COUNTYNAME":"苗栗縣","priority_class":"4","cell_count":"2365","area_km2":"23.650000000000002"},{"COUNTYNAME":"苗栗縣","priority_class":"5","cell_count":"115","area_km2":"1.1500000000000001"},{"COUNTYNAME":"新竹縣","priority_class":"0","cell_count":"0","area_km2":"0.0"},{"COUNTYNAME":"新竹縣","priority_class":"1","cell_count":"1843","area_km2":"18.43"},{"COUNTYNAME":"新竹縣","priority_class":"2","cell_count":"17935","area_km2":"179.35"},{"COUNTYNAME":"新竹縣","priority_class":"3","cell_count":"4908","area_km2":"49.08"},{"COUNTYNAME":"新竹縣","priority_class":"4","cell_count":"2993","area_km2":"29.93"},{"COUNTYNAME":"新竹縣","priority_class":"5","cell_count":"334","area_km2":"3.34"}],"ranking":[{"COUNTYNAME":"臺北市","COUNTYID":"A","COUNTYCODE":"63000","school_count":"359","coverage_status":"ok","county_area_km2_geom":"269.84777252378063","county_area_km2_raster_mask":"193.34","overlay_area_km2_total_class1_5":"193.34","overlay_area_ratio_in_county":"0.7164780283037604","high_priority_area_km2_class4_5":"68.62","high_priority_ratio_in_overlay":"0.35491879590358955","class0_area_km2":"0.0","class1_area_km2":"0.0","class2_area_km2":"71.24","class3_area_km2":"53.480000000000004","class4_area_km2":"57.83","class5_area_km2":"10.790000000000001","tif_path":"county_final/rasters/臺北市_school_heat_priority_5class_within1000m.tif","png_path":"county_final/png/臺北市_school_heat_priority_5class_within1000m.png"},{"COUNTYNAME":"嘉義市","COUNTYID":"I","COUNTYCODE":"10020","school_count":"49","coverage_status":"ok","county_area_km2_geom":"59.72155146256911","county_area_km2_raster_mask":"44.1","overlay_area_km2_total_class1_5":"44.1","overlay_area_ratio_in_county":"0.7384268981632196","high_priority_area_km2_class4_5":"10.84","high_priority_ratio_in_overlay":"0.24580498866213152","class0_area_km2":"0.0","class1_area_km2":"0.0","class2_area_km2":"21.86","class3_area_km2":"11.4","class4_area_km2":"9.26","class5_area_km2":"1.58","tif_path":"county_final/rasters/嘉義市_school_heat_priority_5class_within1000m.tif","png_path":"county_final/png/嘉義市_school_heat_priority_5class_within1000m.png"},{"COUNTYNAME":"基隆市","COUNTYID":"C","COUNTYCODE":"10017","school_count":"72","coverage_status":"ok","county_area_km2_geom":"137.5702673707708","county_area_km2_raster_mask":"73.29","overlay_area_km2_total_class1_5":"73.29","overlay_area_ratio_in_county":"0.5327459297761875","high_priority_area_km2_class4_5":"15.78","high_priority_ratio_in_overlay":"0.21530904625460498","class0_area_km2":"0.0","class1_area_km2":"0.0","class2_area_km2":"39.480000000000004","class3_area_km2":"18.03","class4_area_km2":"13.6","class5_area_km2":"2.18","tif_path":"county_final/rasters/基隆市_school_heat_priority_5class_within1000m.tif","png_path":"county_final/png/基隆市_school_heat_priority_5class_within1000m.png"},{"COUNTYNAME":"新竹市","COUNTYID":"O","COUNTYCODE":"10018","school_count":"72","coverage_status":"ok","county_area_km2_geom":"124.43876140114183","county_area_km2_raster_mask":"79.17","overlay_area_km2_total_class1_5":"79.17","overlay_area_ratio_in_county":"0.6362165543000459","high_priority_area_km2_class4_5":"16.04","high_priority_ratio_in_overlay":"0.20260199570544396","class0_area_km2":"0.0","class1_area_km2":"0.0","class2_area_km2":"44.32","class3_area_km2":"18.81","class4_area_km2":"14.01","class5_area_km2":"2.0300000000000002","tif_path":"county_final/rasters/新竹市_school_heat_priority_5class_within1000m.tif","png_path":"county_final/png/新竹市_school_heat_priority_5class_within1000m.png"},{"COUNTYNAME":"新北市","COUNTYID":"F","COUNTYCODE":"65000","school_count":"393","coverage_status":"ok","county_area_km2_geom":"2066.2625748141118","county_area_km2_raster_mask":"514.0","overlay_area_km2_total_class1_5":"514.0","overlay_area_ratio_in_county":"0.24875831671405133","high_priority_area_km2_class4_5":"86.53","high_priority_ratio_in_overlay":"0.16834630350194552","class0_area_km2":"0.0","class1_area_km2":"1.7","class2_area_km2":"314.37","class3_area_km2":"111.4","class4_area_km2":"76.48","class5_area_km2":"10.05","tif_path":"county_final/rasters/新北市_school_heat_priority_5class_within1000m.tif","png_path":"county_final/png/新北市_school_heat_priority_5class_within1000m.png"},{"COUNTYNAME":"臺中市","COUNTYID":"B","COUNTYCODE":"66000","school_count":"418","coverage_status":"ok","county_area_km2_geom":"2239.684439573994","county_area_km2_raster_mask":"591.67","overlay_area_km2_total_class1_5":"591.67","overlay_area_ratio_in_county":"0.2641756086462521","high_priority_area_km2_class4_5":"96.95","high_priority_ratio_in_overlay":"0.16385823178460968","class0_area_km2":"0.0","class1_area_km2":"16.53","class2_area_km2":"347.47","class3_area_km2":"130.72","class4_area_km2":"86.46000000000001","class5_area_km2":"10.49","tif_path":"county_final/rasters/臺中市_school_heat_priority_5class_within1000m.tif","png_path":"county_final/png/臺中市_school_heat_priority_5class_within1000m.png"},{"COUNTYNAME":"桃園市","COUNTYID":"H","COUNTYCODE":"68000","school_count":"308","coverage_status":"ok","county_area_km2_geom":"1217.2210398474836","county_area_km2_raster_mask":"496.42","overlay_area_km2_total_class1_5":"496.42","overlay_area_ratio_in_county":"0.40783061066887316","high_priority_area_km2_class4_5":"74.21","high_priority_ratio_in_overlay":"0.14949035091253374","class0_area_km2":"0.0","class1_area_km2":"13.21","class2_area_km2":"308.67","class3_area_km2":"100.33","class4_area_km2":"66.24","class5_area_km2":"7.97","tif_path":"county_final/rasters/桃園市_school_heat_priority_5class_within1000m.tif","png_path":"county_final/png/桃園市_school_heat_priority_5class_within1000m.png"},{"COUNTYNAME":"高雄市","COUNTYID":"E","COUNTYCODE":"64000","school_count":"420","coverage_status":"ok","county_area_km2_geom":"2998.4883053316876","county_area_km2_raster_mask":"609.04","overlay_area_km2_total_class1_5":"609.04","overlay_area_ratio_in_county":"0.20311568296499627","high_priority_area_km2_class4_5":"89.78","high_priority_ratio_in_overlay":"0.14741232102981744","class0_area_km2":"0.0","class1_area_km2":"44.17","class2_area_km2":"354.08","class3_area_km2":"121.01","class4_area_km2":"80.73","class5_area_km2":"9.05","tif_path":"county_final/rasters/高雄市_school_heat_priority_5class_within1000m.tif","png_path":"county_final/png/高雄市_school_heat_priority_5class_within1000m.png"},{"COUNTYNAME":"臺南市","COUNTYID":"D","COUNTYCODE":"67000","school_count":"371","coverage_status":"ok","county_area_km2_geom":"2258.786646473204","county_area_km2_raster_mask":"672.16","overlay_area_km2_total_class1_5":"672.16","overlay_area_ratio_in_county":"0.2975756922635826","high_priority_area_km2_class4_5":"88.62","high_priority_ratio_in_overlay":"0.13184360866460368","class0_area_km2":"0.0","class1_area_km2":"3.77","class2_area_km2":"448.81","class3_area_km2":"130.96","class4_area_km2":"78.92","class5_area_km2":"9.700000000000001","tif_path":"county_final/rasters/臺南市_school_heat_priority_5class_within1000m.tif","png_path":"county_final/png/臺南市_school_heat_priority_5class_within1000m.png"},{"COUNTYNAME":"彰化縣","COUNTYID":"N","COUNTYCODE":"10007","school_count":"249","coverage_status":"ok","county_area_km2_geom":"1244.545704357776","county_area_km2_raster_mask":"512.5","overlay_area_km2_total_class1_5":"512.5","overlay_area_ratio_in_county":"0.4117968494089703","high_priority_area_km2_class4_5":"64.60000000000001","high_priority_ratio_in_overlay":"0.1260487804878049","class0_area_km2":"0.0","class1_area_km2":"0.0","class2_area_km2":"349.53000000000003","class3_area_km2":"98.37","class4_area_km2":"57.27","class5_area_km2":"7.33","tif_path":"county_final/rasters/彰化縣_school_heat_priority_5class_within1000m.tif","png_path":"county_final/png/彰化縣_school_heat_priority_5class_within1000m.png"},{"COUNTYNAME":"新竹縣","COUNTYID":"J","COUNTYCODE":"10004","school_count":"149","coverage_status":"ok","county_area_km2_geom":"1411.5208351350345","county_area_km2_raster_mask":"280.13","overlay_area_km2_total_class1_5":"280.13","overlay_area_ratio_in_county":"0.19845969894819235","high_priority_area_km2_class4_5":"33.269999999999996","high_priority_ratio_in_overlay":"0.1187662870809981","class0_area_km2":"0.0","class1_area_km2":"18.43","class2_area_km2":"179.35","class3_area_km2":"49.08","class4_area_km2":"29.93","class5_area_km2":"3.34","tif_path":"county_final/rasters/新竹縣_school_heat_priority_5class_within1000m.tif","png_path":"county_final/png/新竹縣_school_heat_priority_5class_within1000m.png"},{"COUNTYNAME":"宜蘭縣","COUNTYID":"G","COUNTYCODE":"10002","school_count":"133","coverage_status":"ok","county_area_km2_geom":"2201.4504087243513","county_area_km2_raster_mask":"258.11","overlay_area_km2_total_class1_5":"258.11","overlay_area_ratio_in_county":"0.11724543009331925","high_priority_area_km2_class4_5":"29.07","high_priority_ratio_in_overlay":"0.112626399597071","class0_area_km2":"0.0","class1_area_km2":"10.35","class2_area_km2":"173.14000000000001","class3_area_km2":"45.550000000000004","class4_area_km2":"26.62","class5_area_km2":"2.45","tif_path":"county_final/rasters/宜蘭縣_school_heat_priority_5class_within1000m.tif","png_path":"county_final/png/宜蘭縣_school_heat_priority_5class_within1000m.png"},{"COUNTYNAME":"雲林縣","COUNTYID":"P","COUNTYCODE":"10009","school_count":"233","coverage_status":"ok","county_area_km2_geom":"1399.5681864432677","county_area_km2_raster_mask":"518.46","overlay_area_km2_total_class1_5":"518.46","overlay_area_ratio_in_county":"0.3704428301686151","high_priority_area_km2_class4_5":"55.14","high_priority_ratio_in_overlay":"0.10635343131581992","class0_area_km2":"0.0","class1_area_km2":"4.26","class2_area_km2":"368.14","class3_area_km2":"90.92","class4_area_km2":"52.13","class5_area_km2":"3.0100000000000002","tif_path":"county_final/rasters/雲林縣_school_heat_priority_5class_within1000m.tif","png_path":"county_final/png/雲林縣_school_heat_priority_5class_within1000m.png"},{"COUNTYNAME":"屏東縣","COUNTYID":"T","COUNTYCODE":"10013","school_count":"248","coverage_status":"ok","county_area_km2_geom":"2805.0367554745744","county_area_km2_raster_mask":"529.8","overlay_area_km2_total_class1_5":"529.8","overlay_area_ratio_in_county":"0.1888745304196076","high_priority_area_km2_class4_5":"48.82","high_priority_ratio_in_overlay":"0.09214798036995094","class0_area_km2":"0.0","class1_area_km2":"34.56","class2_area_km2":"362.36","class3_area_km2":"84.06","class4_area_km2":"46.1","class5_area_km2":"2.72","tif_path":"county_final/rasters/屏東縣_school_heat_priority_5class_within1000m.tif","png_path":"county_final/png/屏東縣_school_heat_priority_5class_within1000m.png"},{"COUNTYNAME":"嘉義縣","COUNTYID":"Q","COUNTYCODE":"10010","school_count":"172","coverage_status":"ok","county_area_km2_geom":"1952.750456219499","county_area_km2_raster_mask":"426.99","overlay_area_km2_total_class1_5":"426.99","overlay_area_ratio_in_county":"0.2186608118001147","high_priority_area_km2_class4_5":"32.18","high_priority_ratio_in_overlay":"0.07536476264081125","class0_area_km2":"0.0","class1_area_km2":"43.800000000000004","class2_area_km2":"290.90000000000003","class3_area_km2":"60.11","class4_area_km2":"30.95","class5_area_km2":"1.23","tif_path":"county_final/rasters/嘉義縣_school_heat_priority_5class_within1000m.tif","png_path":"county_final/png/嘉義縣_school_heat_priority_5class_within1000m.png"},{"COUNTYNAME":"臺東縣","COUNTYID":"V","COUNTYCODE":"10014","school_count":"144","coverage_status":"ok","county_area_km2_geom":"3582.21091690537","county_area_km2_raster_mask":"284.94","overlay_area_km2_total_class1_5":"284.94","overlay_area_ratio_in_county":"0.07954305500418617","high_priority_area_km2_class4_5":"20.27","high_priority_ratio_in_overlay":"0.07113778339299502","class0_area_km2":"0.0","class1_area_km2":"37.27","class2_area_km2":"189.47","class3_area_km2":"37.93","class4_area_km2":"18.96","class5_area_km2":"1.31","tif_path":"county_final/rasters/臺東縣_school_heat_priority_5class_within1000m.tif","png_path":"county_final/png/臺東縣_school_heat_priority_5class_within1000m.png"},{"COUNTYNAME":"苗栗縣","COUNTYID":"K","COUNTYCODE":"10005","school_count":"179","coverage_status":"ok","county_area_km2_geom":"1826.7514530792116","county_area_km2_raster_mask":"367.06","overlay_area_km2_total_class1_5":"367.06","overlay_area_ratio_in_county":"0.20093592884859937","high_priority_area_km2_class4_5":"24.8","high_priority_ratio_in_overlay":"0.06756388601318586","class0_area_km2":"0.0","class1_area_km2":"51.97","class2_area_km2":"241.44","class3_area_km2":"48.85","class4_area_km2":"23.650000000000002","class5_area_km2":"1.1500000000000001","tif_path":"county_final/rasters/苗栗縣_school_heat_priority_5class_within1000m.tif","png_path":"county_final/png/苗栗縣_school_heat_priority_5class_within1000m.png"},{"COUNTYNAME":"花蓮縣","COUNTYID":"U","COUNTYCODE":"10015","school_count":"153","coverage_status":"ok","county_area_km2_geom":"4605.284306394628","county_area_km2_raster_mask":"304.90000000000003","overlay_area_km2_total_class1_5":"304.90000000000003","overlay_area_ratio_in_county":"0.06620655310609895","high_priority_area_km2_class4_5":"17.77","high_priority_ratio_in_overlay":"0.05828140373893079","class0_area_km2":"0.0","class1_area_km2":"64.39","class2_area_km2":"187.57","class3_area_km2":"35.17","class4_area_km2":"16.28","class5_area_km2":"1.49","tif_path":"county_final/rasters/花蓮縣_school_heat_priority_5class_within1000m.tif","png_path":"county_final/png/花蓮縣_school_heat_priority_5class_within1000m.png"},{"COUNTYNAME":"南投縣","COUNTYID":"M","COUNTYCODE":"10008","school_count":"207","coverage_status":"ok","county_area_km2_geom":"4097.729913764787","county_area_km2_raster_mask":"433.82","overlay_area_km2_total_class1_5":"433.82","overlay_area_ratio_in_county":"0.1058683732528941","high_priority_area_km2_class4_5":"19.35","high_priority_ratio_in_overlay":"0.04460375270849661","class0_area_km2":"0.0","class1_area_km2":"87.64","class2_area_km2":"277.86","class3_area_km2":"48.97","class4_area_km2":"18.02","class5_area_km2":"1.33","tif_path":"county_final/rasters/南投縣_school_heat_priority_5class_within1000m.tif","png_path":"county_final/png/南投縣_school_heat_priority_5class_within1000m.png"},{"COUNTYNAME":"連江縣","COUNTYID":"Z","COUNTYCODE":"09007","school_count":"2","coverage_status":"outside_raster","county_area_km2_geom":"29.735032323048667","county_area_km2_raster_mask":"0.0","overlay_area_km2_total_class1_5":"0.0","overlay_area_ratio_in_county":"","high_priority_area_km2_class4_5":"0.0","high_priority_ratio_in_overlay":"","class0_area_km2":"","class1_area_km2":"","class2_area_km2":"","class3_area_km2":"","class4_area_km2":"","class5_area_km2":"","tif_path":"","png_path":""},{"COUNTYNAME":"金門縣","COUNTYID":"W","COUNTYCODE":"09020","school_count":"0","coverage_status":"ok","county_area_km2_geom":"185.0311079967785","county_area_km2_raster_mask":"0.0","overlay_area_km2_total_class1_5":"0.0","overlay_area_ratio_in_county":"0.0","high_priority_area_km2_class4_5":"0.0","high_priority_ratio_in_overlay":"","class0_area_km2":"0.0","class1_area_km2":"0.0","class2_area_km2":"0.0","class3_area_km2":"0.0","class4_area_km2":"0.0","class5_area_km2":"0.0","tif_path":"county_final/rasters/金門縣_school_heat_priority_5class_within1000m.tif","png_path":"county_final/png/金門縣_school_heat_priority_5class_within1000m.png"},{"COUNTYNAME":"澎湖縣","COUNTYID":"X","COUNTYCODE":"10016","school_count":"0","coverage_status":"ok","county_area_km2_geom":"135.22387062731275","county_area_km2_raster_mask":"0.0","overlay_area_km2_total_class1_5":"0.0","overlay_area_ratio_in_county":"0.0","high_priority_area_km2_class4_5":"0.0","high_priority_ratio_in_overlay":"","class0_area_km2":"0.0","class1_area_km2":"0.0","class2_area_km2":"0.0","class3_area_km2":"0.0","class4_area_km2":"0.0","class5_area_km2":"0.0","tif_path":"county_final/rasters/澎湖縣_school_heat_priority_5class_within1000m.tif","png_path":"county_final/png/澎湖縣_school_heat_priority_5class_within1000m.png"}],"inventory":[{"file_name":"county__南投縣_school_heat_priority_5class_within1000m.png","relative_path":"all_png/county__南投縣_school_heat_priority_5class_within1000m.png"},{"file_name":"county__嘉義市_school_heat_priority_5class_within1000m.png","relative_path":"all_png/county__嘉義市_school_heat_priority_5class_within1000m.png"},{"file_name":"county__嘉義縣_school_heat_priority_5class_within1000m.png","relative_path":"all_png/county__嘉義縣_school_heat_priority_5class_within1000m.png"},{"file_name":"county__基隆市_school_heat_priority_5class_within1000m.png","relative_path":"all_png/county__基隆市_school_heat_priority_5class_within1000m.png"},{"file_name":"county__宜蘭縣_school_heat_priority_5class_within1000m.png","relative_path":"all_png/county__宜蘭縣_school_heat_priority_5class_within1000m.png"},{"file_name":"county__屏東縣_school_heat_priority_5class_within1000m.png","relative_path":"all_png/county__屏東縣_school_heat_priority_5class_within1000m.png"},{"file_name":"county__彰化縣_school_heat_priority_5class_within1000m.png","relative_path":"all_png/county__彰化縣_school_heat_priority_5class_within1000m.png"},{"file_name":"county__新北市_school_heat_priority_5class_within1000m.png","relative_path":"all_png/county__新北市_school_heat_priority_5class_within1000m.png"},{"file_name":"county__新竹市_school_heat_priority_5class_within1000m.png","relative_path":"all_png/county__新竹市_school_heat_priority_5class_within1000m.png"},{"file_name":"county__新竹縣_school_heat_priority_5class_within1000m.png","relative_path":"all_png/county__新竹縣_school_heat_priority_5class_within1000m.png"},{"file_name":"county__桃園市_school_heat_priority_5class_within1000m.png","relative_path":"all_png/county__桃園市_school_heat_priority_5class_within1000m.png"},{"file_name":"county__澎湖縣_school_heat_priority_5class_within1000m.png","relative_path":"all_png/county__澎湖縣_school_heat_priority_5class_within1000m.png"},{"file_name":"county__臺中市_school_heat_priority_5class_within1000m.png","relative_path":"all_png/county__臺中市_school_heat_priority_5class_within1000m.png"},{"file_name":"county__臺北市_school_heat_priority_5class_within1000m.png","relative_path":"all_png/county__臺北市_school_heat_priority_5class_within1000m.png"},{"file_name":"county__臺南市_school_heat_priority_5class_within1000m.png","relative_path":"all_png/county__臺南市_school_heat_priority_5class_within1000m.png"},{"file_name":"county__臺東縣_school_heat_priority_5class_within1000m.png","relative_path":"all_png/county__臺東縣_school_heat_priority_5class_within1000m.png"},{"file_name":"county__花蓮縣_school_heat_priority_5class_within1000m.png","relative_path":"all_png/county__花蓮縣_school_heat_priority_5class_within1000m.png"},{"file_name":"county__苗栗縣_school_heat_priority_5class_within1000m.png","relative_path":"all_png/county__苗栗縣_school_heat_priority_5class_within1000m.png"},{"file_name":"county__金門縣_school_heat_priority_5class_within1000m.png","relative_path":"all_png/county__金門縣_school_heat_priority_5class_within1000m.png"},{"file_name":"county__雲林縣_school_heat_priority_5class_within1000m.png","relative_path":"all_png/county__雲林縣_school_heat_priority_5class_within1000m.png"},{"file_name":"county__高雄市_school_heat_priority_5class_within1000m.png","relative_path":"all_png/county__高雄市_school_heat_priority_5class_within1000m.png"},{"file_name":"full__8b5ee37f-5341-5537-be64-f4838d8489b4.png","relative_path":"all_png/full__8b5ee37f-5341-5537-be64-f4838d8489b4.png"},{"file_name":"full__dog_conflict_heat_5class.png","relative_path":"all_png/full__dog_conflict_heat_5class.png"},{"file_name":"full__high_heat_class4_5_within_school_1000m.png","relative_path":"all_png/full__high_heat_class4_5_within_school_1000m.png"},{"file_name":"full__school_distance_class_5class.png","relative_path":"all_png/full__school_distance_class_5class.png"},{"file_name":"full__school_heat_priority_5class.png","relative_path":"all_png/full__school_heat_priority_5class.png"},{"file_name":"full__school_heat_priority_5class_within1000m.png","relative_path":"all_png/full__school_heat_priority_5class_within1000m.png"},{"file_name":"full__school_heat_risk_score_1to25.png","relative_path":"all_png/full__school_heat_risk_score_1to25.png"},{"file_name":"full__school_heat_risk_score_within1000m.png","relative_path":"all_png/full__school_heat_risk_score_within1000m.png"}]}</script>
-
   <script>
-    const tableSources = {
-      summary: [
-        "tables/county_final_priority_summary.csv",
-        "county_final_priority_summary.csv",
-        "ms8ldx3s-county_final_priority_summary.csv"
-      ],
-      classLong: [
-        "tables/county_final_priority_class_area_long.csv",
-        "county_final_priority_class_area_long.csv",
-        "ms8ldx3n-county_final_priority_class_area_long.csv"
-      ],
-      ranking: [
-        "tables/county_final_priority_ranking.csv",
-        "county_final_priority_ranking.csv",
-        "ms8ldx3q-county_final_priority_ranking.csv"
-      ],
-      inventory: [
-        "tables/all_png_inventory.csv",
-        "all_png_inventory.csv",
-        "ms8ldx3n-all_png_inventory.csv"
-      ]
-    };
+    const SITE_DATA = {"summary": [{"COUNTYNAME": "連江縣", "COUNTYID": "Z", "COUNTYCODE": "09007", "school_count": "2", "coverage_status": "outside_raster", "county_area_km2_geom": "29.735032323048667", "county_area_km2_raster_mask": "0.0", "overlay_area_km2_total_class1_5": "0.0", "overlay_area_ratio_in_county": "", "high_priority_area_km2_class4_5": "0.0", "high_priority_ratio_in_overlay": "", "class0_area_km2": "", "class1_area_km2": "", "class2_area_km2": "", "class3_area_km2": "", "class4_area_km2": "", "class5_area_km2": "", "tif_path": "", "png_path": ""}, {"COUNTYNAME": "宜蘭縣", "COUNTYID": "G", "COUNTYCODE": "10002", "school_count": "133", "coverage_status": "ok", "county_area_km2_geom": "2201.4504087243513", "county_area_km2_raster_mask": "258.11", "overlay_area_km2_total_class1_5": "258.11", "overlay_area_ratio_in_county": "0.11724543009331925", "high_priority_area_km2_class4_5": "29.07", "high_priority_ratio_in_overlay": "0.112626399597071", "class0_area_km2": "0.0", "class1_area_km2": "10.35", "class2_area_km2": "173.14000000000001", "class3_area_km2": "45.550000000000004", "class4_area_km2": "26.62", "class5_area_km2": "2.45", "tif_path": "county_final/rasters/宜蘭縣_school_heat_priority_5class_within1000m.tif", "png_path": "county_final/png/宜蘭縣_school_heat_priority_5class_within1000m.png"}, {"COUNTYNAME": "彰化縣", "COUNTYID": "N", "COUNTYCODE": "10007", "school_count": "249", "coverage_status": "ok", "county_area_km2_geom": "1244.545704357776", "county_area_km2_raster_mask": "512.5", "overlay_area_km2_total_class1_5": "512.5", "overlay_area_ratio_in_county": "0.4117968494089703", "high_priority_area_km2_class4_5": "64.60000000000001", "high_priority_ratio_in_overlay": "0.1260487804878049", "class0_area_km2": "0.0", "class1_area_km2": "0.0", "class2_area_km2": "349.53000000000003", "class3_area_km2": "98.37", "class4_area_km2": "57.27", "class5_area_km2": "7.33", "tif_path": "county_final/rasters/彰化縣_school_heat_priority_5class_within1000m.tif", "png_path": "county_final/png/彰化縣_school_heat_priority_5class_within1000m.png"}, {"COUNTYNAME": "南投縣", "COUNTYID": "M", "COUNTYCODE": "10008", "school_count": "207", "coverage_status": "ok", "county_area_km2_geom": "4097.729913764787", "county_area_km2_raster_mask": "433.82", "overlay_area_km2_total_class1_5": "433.82", "overlay_area_ratio_in_county": "0.1058683732528941", "high_priority_area_km2_class4_5": "19.35", "high_priority_ratio_in_overlay": "0.04460375270849661", "class0_area_km2": "0.0", "class1_area_km2": "87.64", "class2_area_km2": "277.86", "class3_area_km2": "48.97", "class4_area_km2": "18.02", "class5_area_km2": "1.33", "tif_path": "county_final/rasters/南投縣_school_heat_priority_5class_within1000m.tif", "png_path": "county_final/png/南投縣_school_heat_priority_5class_within1000m.png"}, {"COUNTYNAME": "雲林縣", "COUNTYID": "P", "COUNTYCODE": "10009", "school_count": "233", "coverage_status": "ok", "county_area_km2_geom": "1399.5681864432677", "county_area_km2_raster_mask": "518.46", "overlay_area_km2_total_class1_5": "518.46", "overlay_area_ratio_in_county": "0.3704428301686151", "high_priority_area_km2_class4_5": "55.14", "high_priority_ratio_in_overlay": "0.10635343131581992", "class0_area_km2": "0.0", "class1_area_km2": "4.26", "class2_area_km2": "368.14", "class3_area_km2": "90.92", "class4_area_km2": "52.13", "class5_area_km2": "3.0100000000000002", "tif_path": "county_final/rasters/雲林縣_school_heat_priority_5class_within1000m.tif", "png_path": "county_final/png/雲林縣_school_heat_priority_5class_within1000m.png"}, {"COUNTYNAME": "屏東縣", "COUNTYID": "T", "COUNTYCODE": "10013", "school_count": "248", "coverage_status": "ok", "county_area_km2_geom": "2805.0367554745744", "county_area_km2_raster_mask": "529.8", "overlay_area_km2_total_class1_5": "529.8", "overlay_area_ratio_in_county": "0.1888745304196076", "high_priority_area_km2_class4_5": "48.82", "high_priority_ratio_in_overlay": "0.09214798036995094", "class0_area_km2": "0.0", "class1_area_km2": "34.56", "class2_area_km2": "362.36", "class3_area_km2": "84.06", "class4_area_km2": "46.1", "class5_area_km2": "2.72", "tif_path": "county_final/rasters/屏東縣_school_heat_priority_5class_within1000m.tif", "png_path": "county_final/png/屏東縣_school_heat_priority_5class_within1000m.png"}, {"COUNTYNAME": "基隆市", "COUNTYID": "C", "COUNTYCODE": "10017", "school_count": "72", "coverage_status": "ok", "county_area_km2_geom": "137.5702673707708", "county_area_km2_raster_mask": "73.29", "overlay_area_km2_total_class1_5": "73.29", "overlay_area_ratio_in_county": "0.5327459297761875", "high_priority_area_km2_class4_5": "15.78", "high_priority_ratio_in_overlay": "0.21530904625460498", "class0_area_km2": "0.0", "class1_area_km2": "0.0", "class2_area_km2": "39.480000000000004", "class3_area_km2": "18.03", "class4_area_km2": "13.6", "class5_area_km2": "2.18", "tif_path": "county_final/rasters/基隆市_school_heat_priority_5class_within1000m.tif", "png_path": "county_final/png/基隆市_school_heat_priority_5class_within1000m.png"}, {"COUNTYNAME": "臺北市", "COUNTYID": "A", "COUNTYCODE": "63000", "school_count": "359", "coverage_status": "ok", "county_area_km2_geom": "269.84777252378063", "county_area_km2_raster_mask": "193.34", "overlay_area_km2_total_class1_5": "193.34", "overlay_area_ratio_in_county": "0.7164780283037604", "high_priority_area_km2_class4_5": "68.62", "high_priority_ratio_in_overlay": "0.35491879590358955", "class0_area_km2": "0.0", "class1_area_km2": "0.0", "class2_area_km2": "71.24", "class3_area_km2": "53.480000000000004", "class4_area_km2": "57.83", "class5_area_km2": "10.790000000000001", "tif_path": "county_final/rasters/臺北市_school_heat_priority_5class_within1000m.tif", "png_path": "county_final/png/臺北市_school_heat_priority_5class_within1000m.png"}, {"COUNTYNAME": "新北市", "COUNTYID": "F", "COUNTYCODE": "65000", "school_count": "393", "coverage_status": "ok", "county_area_km2_geom": "2066.2625748141118", "county_area_km2_raster_mask": "514.0", "overlay_area_km2_total_class1_5": "514.0", "overlay_area_ratio_in_county": "0.24875831671405133", "high_priority_area_km2_class4_5": "86.53", "high_priority_ratio_in_overlay": "0.16834630350194552", "class0_area_km2": "0.0", "class1_area_km2": "1.7", "class2_area_km2": "314.37", "class3_area_km2": "111.4", "class4_area_km2": "76.48", "class5_area_km2": "10.05", "tif_path": "county_final/rasters/新北市_school_heat_priority_5class_within1000m.tif", "png_path": "county_final/png/新北市_school_heat_priority_5class_within1000m.png"}, {"COUNTYNAME": "臺南市", "COUNTYID": "D", "COUNTYCODE": "67000", "school_count": "371", "coverage_status": "ok", "county_area_km2_geom": "2258.786646473204", "county_area_km2_raster_mask": "672.16", "overlay_area_km2_total_class1_5": "672.16", "overlay_area_ratio_in_county": "0.2975756922635826", "high_priority_area_km2_class4_5": "88.62", "high_priority_ratio_in_overlay": "0.13184360866460368", "class0_area_km2": "0.0", "class1_area_km2": "3.77", "class2_area_km2": "448.81", "class3_area_km2": "130.96", "class4_area_km2": "78.92", "class5_area_km2": "9.700000000000001", "tif_path": "county_final/rasters/臺南市_school_heat_priority_5class_within1000m.tif", "png_path": "county_final/png/臺南市_school_heat_priority_5class_within1000m.png"}, {"COUNTYNAME": "桃園市", "COUNTYID": "H", "COUNTYCODE": "68000", "school_count": "308", "coverage_status": "ok", "county_area_km2_geom": "1217.2210398474836", "county_area_km2_raster_mask": "496.42", "overlay_area_km2_total_class1_5": "496.42", "overlay_area_ratio_in_county": "0.40783061066887316", "high_priority_area_km2_class4_5": "74.21", "high_priority_ratio_in_overlay": "0.14949035091253374", "class0_area_km2": "0.0", "class1_area_km2": "13.21", "class2_area_km2": "308.67", "class3_area_km2": "100.33", "class4_area_km2": "66.24", "class5_area_km2": "7.97", "tif_path": "county_final/rasters/桃園市_school_heat_priority_5class_within1000m.tif", "png_path": "county_final/png/桃園市_school_heat_priority_5class_within1000m.png"}, {"COUNTYNAME": "嘉義市", "COUNTYID": "I", "COUNTYCODE": "10020", "school_count": "49", "coverage_status": "ok", "county_area_km2_geom": "59.72155146256911", "county_area_km2_raster_mask": "44.1", "overlay_area_km2_total_class1_5": "44.1", "overlay_area_ratio_in_county": "0.7384268981632196", "high_priority_area_km2_class4_5": "10.84", "high_priority_ratio_in_overlay": "0.24580498866213152", "class0_area_km2": "0.0", "class1_area_km2": "0.0", "class2_area_km2": "21.86", "class3_area_km2": "11.4", "class4_area_km2": "9.26", "class5_area_km2": "1.58", "tif_path": "county_final/rasters/嘉義市_school_heat_priority_5class_within1000m.tif", "png_path": "county_final/png/嘉義市_school_heat_priority_5class_within1000m.png"}, {"COUNTYNAME": "嘉義縣", "COUNTYID": "Q", "COUNTYCODE": "10010", "school_count": "172", "coverage_status": "ok", "county_area_km2_geom": "1952.750456219499", "county_area_km2_raster_mask": "426.99", "overlay_area_km2_total_class1_5": "426.99", "overlay_area_ratio_in_county": "0.2186608118001147", "high_priority_area_km2_class4_5": "32.18", "high_priority_ratio_in_overlay": "0.07536476264081125", "class0_area_km2": "0.0", "class1_area_km2": "43.800000000000004", "class2_area_km2": "290.90000000000003", "class3_area_km2": "60.11", "class4_area_km2": "30.95", "class5_area_km2": "1.23", "tif_path": "county_final/rasters/嘉義縣_school_heat_priority_5class_within1000m.tif", "png_path": "county_final/png/嘉義縣_school_heat_priority_5class_within1000m.png"}, {"COUNTYNAME": "金門縣", "COUNTYID": "W", "COUNTYCODE": "09020", "school_count": "0", "coverage_status": "ok", "county_area_km2_geom": "185.0311079967785", "county_area_km2_raster_mask": "0.0", "overlay_area_km2_total_class1_5": "0.0", "overlay_area_ratio_in_county": "0.0", "high_priority_area_km2_class4_5": "0.0", "high_priority_ratio_in_overlay": "", "class0_area_km2": "0.0", "class1_area_km2": "0.0", "class2_area_km2": "0.0", "class3_area_km2": "0.0", "class4_area_km2": "0.0", "class5_area_km2": "0.0", "tif_path": "county_final/rasters/金門縣_school_heat_priority_5class_within1000m.tif", "png_path": "county_final/png/金門縣_school_heat_priority_5class_within1000m.png"}, {"COUNTYNAME": "高雄市", "COUNTYID": "E", "COUNTYCODE": "64000", "school_count": "420", "coverage_status": "ok", "county_area_km2_geom": "2998.4883053316876", "county_area_km2_raster_mask": "609.04", "overlay_area_km2_total_class1_5": "609.04", "overlay_area_ratio_in_county": "0.20311568296499627", "high_priority_area_km2_class4_5": "89.78", "high_priority_ratio_in_overlay": "0.14741232102981744", "class0_area_km2": "0.0", "class1_area_km2": "44.17", "class2_area_km2": "354.08", "class3_area_km2": "121.01", "class4_area_km2": "80.73", "class5_area_km2": "9.05", "tif_path": "county_final/rasters/高雄市_school_heat_priority_5class_within1000m.tif", "png_path": "county_final/png/高雄市_school_heat_priority_5class_within1000m.png"}, {"COUNTYNAME": "臺東縣", "COUNTYID": "V", "COUNTYCODE": "10014", "school_count": "144", "coverage_status": "ok", "county_area_km2_geom": "3582.21091690537", "county_area_km2_raster_mask": "284.94", "overlay_area_km2_total_class1_5": "284.94", "overlay_area_ratio_in_county": "0.07954305500418617", "high_priority_area_km2_class4_5": "20.27", "high_priority_ratio_in_overlay": "0.07113778339299502", "class0_area_km2": "0.0", "class1_area_km2": "37.27", "class2_area_km2": "189.47", "class3_area_km2": "37.93", "class4_area_km2": "18.96", "class5_area_km2": "1.31", "tif_path": "county_final/rasters/臺東縣_school_heat_priority_5class_within1000m.tif", "png_path": "county_final/png/臺東縣_school_heat_priority_5class_within1000m.png"}, {"COUNTYNAME": "花蓮縣", "COUNTYID": "U", "COUNTYCODE": "10015", "school_count": "153", "coverage_status": "ok", "county_area_km2_geom": "4605.284306394628", "county_area_km2_raster_mask": "304.90000000000003", "overlay_area_km2_total_class1_5": "304.90000000000003", "overlay_area_ratio_in_county": "0.06620655310609895", "high_priority_area_km2_class4_5": "17.77", "high_priority_ratio_in_overlay": "0.05828140373893079", "class0_area_km2": "0.0", "class1_area_km2": "64.39", "class2_area_km2": "187.57", "class3_area_km2": "35.17", "class4_area_km2": "16.28", "class5_area_km2": "1.49", "tif_path": "county_final/rasters/花蓮縣_school_heat_priority_5class_within1000m.tif", "png_path": "county_final/png/花蓮縣_school_heat_priority_5class_within1000m.png"}, {"COUNTYNAME": "澎湖縣", "COUNTYID": "X", "COUNTYCODE": "10016", "school_count": "0", "coverage_status": "ok", "county_area_km2_geom": "135.22387062731275", "county_area_km2_raster_mask": "0.0", "overlay_area_km2_total_class1_5": "0.0", "overlay_area_ratio_in_county": "0.0", "high_priority_area_km2_class4_5": "0.0", "high_priority_ratio_in_overlay": "", "class0_area_km2": "0.0", "class1_area_km2": "0.0", "class2_area_km2": "0.0", "class3_area_km2": "0.0", "class4_area_km2": "0.0", "class5_area_km2": "0.0", "tif_path": "county_final/rasters/澎湖縣_school_heat_priority_5class_within1000m.tif", "png_path": "county_final/png/澎湖縣_school_heat_priority_5class_within1000m.png"}, {"COUNTYNAME": "新竹市", "COUNTYID": "O", "COUNTYCODE": "10018", "school_count": "72", "coverage_status": "ok", "county_area_km2_geom": "124.43876140114183", "county_area_km2_raster_mask": "79.17", "overlay_area_km2_total_class1_5": "79.17", "overlay_area_ratio_in_county": "0.6362165543000459", "high_priority_area_km2_class4_5": "16.04", "high_priority_ratio_in_overlay": "0.20260199570544396", "class0_area_km2": "0.0", "class1_area_km2": "0.0", "class2_area_km2": "44.32", "class3_area_km2": "18.81", "class4_area_km2": "14.01", "class5_area_km2": "2.0300000000000002", "tif_path": "county_final/rasters/新竹市_school_heat_priority_5class_within1000m.tif", "png_path": "county_final/png/新竹市_school_heat_priority_5class_within1000m.png"}, {"COUNTYNAME": "臺中市", "COUNTYID": "B", "COUNTYCODE": "66000", "school_count": "418", "coverage_status": "ok", "county_area_km2_geom": "2239.684439573994", "county_area_km2_raster_mask": "591.67", "overlay_area_km2_total_class1_5": "591.67", "overlay_area_ratio_in_county": "0.2641756086462521", "high_priority_area_km2_class4_5": "96.95", "high_priority_ratio_in_overlay": "0.16385823178460968", "class0_area_km2": "0.0", "class1_area_km2": "16.53", "class2_area_km2": "347.47", "class3_area_km2": "130.72", "class4_area_km2": "86.46000000000001", "class5_area_km2": "10.49", "tif_path": "county_final/rasters/臺中市_school_heat_priority_5class_within1000m.tif", "png_path": "county_final/png/臺中市_school_heat_priority_5class_within1000m.png"}, {"COUNTYNAME": "苗栗縣", "COUNTYID": "K", "COUNTYCODE": "10005", "school_count": "179", "coverage_status": "ok", "county_area_km2_geom": "1826.7514530792116", "county_area_km2_raster_mask": "367.06", "overlay_area_km2_total_class1_5": "367.06", "overlay_area_ratio_in_county": "0.20093592884859937", "high_priority_area_km2_class4_5": "24.8", "high_priority_ratio_in_overlay": "0.06756388601318586", "class0_area_km2": "0.0", "class1_area_km2": "51.97", "class2_area_km2": "241.44", "class3_area_km2": "48.85", "class4_area_km2": "23.650000000000002", "class5_area_km2": "1.1500000000000001", "tif_path": "county_final/rasters/苗栗縣_school_heat_priority_5class_within1000m.tif", "png_path": "county_final/png/苗栗縣_school_heat_priority_5class_within1000m.png"}, {"COUNTYNAME": "新竹縣", "COUNTYID": "J", "COUNTYCODE": "10004", "school_count": "149", "coverage_status": "ok", "county_area_km2_geom": "1411.5208351350345", "county_area_km2_raster_mask": "280.13", "overlay_area_km2_total_class1_5": "280.13", "overlay_area_ratio_in_county": "0.19845969894819235", "high_priority_area_km2_class4_5": "33.269999999999996", "high_priority_ratio_in_overlay": "0.1187662870809981", "class0_area_km2": "0.0", "class1_area_km2": "18.43", "class2_area_km2": "179.35", "class3_area_km2": "49.08", "class4_area_km2": "29.93", "class5_area_km2": "3.34", "tif_path": "county_final/rasters/新竹縣_school_heat_priority_5class_within1000m.tif", "png_path": "county_final/png/新竹縣_school_heat_priority_5class_within1000m.png"}], "classLong": [{"COUNTYNAME": "宜蘭縣", "priority_class": "0", "cell_count": "0", "area_km2": "0.0"}, {"COUNTYNAME": "宜蘭縣", "priority_class": "1", "cell_count": "1035", "area_km2": "10.35"}, {"COUNTYNAME": "宜蘭縣", "priority_class": "2", "cell_count": "17314", "area_km2": "173.14000000000001"}, {"COUNTYNAME": "宜蘭縣", "priority_class": "3", "cell_count": "4555", "area_km2": "45.550000000000004"}, {"COUNTYNAME": "宜蘭縣", "priority_class": "4", "cell_count": "2662", "area_km2": "26.62"}, {"COUNTYNAME": "宜蘭縣", "priority_class": "5", "cell_count": "245", "area_km2": "2.45"}, {"COUNTYNAME": "彰化縣", "priority_class": "0", "cell_count": "0", "area_km2": "0.0"}, {"COUNTYNAME": "彰化縣", "priority_class": "1", "cell_count": "0", "area_km2": "0.0"}, {"COUNTYNAME": "彰化縣", "priority_class": "2", "cell_count": "34953", "area_km2": "349.53000000000003"}, {"COUNTYNAME": "彰化縣", "priority_class": "3", "cell_count": "9837", "area_km2": "98.37"}, {"COUNTYNAME": "彰化縣", "priority_class": "4", "cell_count": "5727", "area_km2": "57.27"}, {"COUNTYNAME": "彰化縣", "priority_class": "5", "cell_count": "733", "area_km2": "7.33"}, {"COUNTYNAME": "南投縣", "priority_class": "0", "cell_count": "0", "area_km2": "0.0"}, {"COUNTYNAME": "南投縣", "priority_class": "1", "cell_count": "8764", "area_km2": "87.64"}, {"COUNTYNAME": "南投縣", "priority_class": "2", "cell_count": "27786", "area_km2": "277.86"}, {"COUNTYNAME": "南投縣", "priority_class": "3", "cell_count": "4897", "area_km2": "48.97"}, {"COUNTYNAME": "南投縣", "priority_class": "4", "cell_count": "1802", "area_km2": "18.02"}, {"COUNTYNAME": "南投縣", "priority_class": "5", "cell_count": "133", "area_km2": "1.33"}, {"COUNTYNAME": "雲林縣", "priority_class": "0", "cell_count": "0", "area_km2": "0.0"}, {"COUNTYNAME": "雲林縣", "priority_class": "1", "cell_count": "426", "area_km2": "4.26"}, {"COUNTYNAME": "雲林縣", "priority_class": "2", "cell_count": "36814", "area_km2": "368.14"}, {"COUNTYNAME": "雲林縣", "priority_class": "3", "cell_count": "9092", "area_km2": "90.92"}, {"COUNTYNAME": "雲林縣", "priority_class": "4", "cell_count": "5213", "area_km2": "52.13"}, {"COUNTYNAME": "雲林縣", "priority_class": "5", "cell_count": "301", "area_km2": "3.0100000000000002"}, {"COUNTYNAME": "屏東縣", "priority_class": "0", "cell_count": "0", "area_km2": "0.0"}, {"COUNTYNAME": "屏東縣", "priority_class": "1", "cell_count": "3456", "area_km2": "34.56"}, {"COUNTYNAME": "屏東縣", "priority_class": "2", "cell_count": "36236", "area_km2": "362.36"}, {"COUNTYNAME": "屏東縣", "priority_class": "3", "cell_count": "8406", "area_km2": "84.06"}, {"COUNTYNAME": "屏東縣", "priority_class": "4", "cell_count": "4610", "area_km2": "46.1"}, {"COUNTYNAME": "屏東縣", "priority_class": "5", "cell_count": "272", "area_km2": "2.72"}, {"COUNTYNAME": "基隆市", "priority_class": "0", "cell_count": "0", "area_km2": "0.0"}, {"COUNTYNAME": "基隆市", "priority_class": "1", "cell_count": "0", "area_km2": "0.0"}, {"COUNTYNAME": "基隆市", "priority_class": "2", "cell_count": "3948", "area_km2": "39.480000000000004"}, {"COUNTYNAME": "基隆市", "priority_class": "3", "cell_count": "1803", "area_km2": "18.03"}, {"COUNTYNAME": "基隆市", "priority_class": "4", "cell_count": "1360", "area_km2": "13.6"}, {"COUNTYNAME": "基隆市", "priority_class": "5", "cell_count": "218", "area_km2": "2.18"}, {"COUNTYNAME": "臺北市", "priority_class": "0", "cell_count": "0", "area_km2": "0.0"}, {"COUNTYNAME": "臺北市", "priority_class": "1", "cell_count": "0", "area_km2": "0.0"}, {"COUNTYNAME": "臺北市", "priority_class": "2", "cell_count": "7124", "area_km2": "71.24"}, {"COUNTYNAME": "臺北市", "priority_class": "3", "cell_count": "5348", "area_km2": "53.480000000000004"}, {"COUNTYNAME": "臺北市", "priority_class": "4", "cell_count": "5783", "area_km2": "57.83"}, {"COUNTYNAME": "臺北市", "priority_class": "5", "cell_count": "1079", "area_km2": "10.790000000000001"}, {"COUNTYNAME": "新北市", "priority_class": "0", "cell_count": "0", "area_km2": "0.0"}, {"COUNTYNAME": "新北市", "priority_class": "1", "cell_count": "170", "area_km2": "1.7"}, {"COUNTYNAME": "新北市", "priority_class": "2", "cell_count": "31437", "area_km2": "314.37"}, {"COUNTYNAME": "新北市", "priority_class": "3", "cell_count": "11140", "area_km2": "111.4"}, {"COUNTYNAME": "新北市", "priority_class": "4", "cell_count": "7648", "area_km2": "76.48"}, {"COUNTYNAME": "新北市", "priority_class": "5", "cell_count": "1005", "area_km2": "10.05"}, {"COUNTYNAME": "臺南市", "priority_class": "0", "cell_count": "0", "area_km2": "0.0"}, {"COUNTYNAME": "臺南市", "priority_class": "1", "cell_count": "377", "area_km2": "3.77"}, {"COUNTYNAME": "臺南市", "priority_class": "2", "cell_count": "44881", "area_km2": "448.81"}, {"COUNTYNAME": "臺南市", "priority_class": "3", "cell_count": "13096", "area_km2": "130.96"}, {"COUNTYNAME": "臺南市", "priority_class": "4", "cell_count": "7892", "area_km2": "78.92"}, {"COUNTYNAME": "臺南市", "priority_class": "5", "cell_count": "970", "area_km2": "9.700000000000001"}, {"COUNTYNAME": "桃園市", "priority_class": "0", "cell_count": "0", "area_km2": "0.0"}, {"COUNTYNAME": "桃園市", "priority_class": "1", "cell_count": "1321", "area_km2": "13.21"}, {"COUNTYNAME": "桃園市", "priority_class": "2", "cell_count": "30867", "area_km2": "308.67"}, {"COUNTYNAME": "桃園市", "priority_class": "3", "cell_count": "10033", "area_km2": "100.33"}, {"COUNTYNAME": "桃園市", "priority_class": "4", "cell_count": "6624", "area_km2": "66.24"}, {"COUNTYNAME": "桃園市", "priority_class": "5", "cell_count": "797", "area_km2": "7.97"}, {"COUNTYNAME": "嘉義市", "priority_class": "0", "cell_count": "0", "area_km2": "0.0"}, {"COUNTYNAME": "嘉義市", "priority_class": "1", "cell_count": "0", "area_km2": "0.0"}, {"COUNTYNAME": "嘉義市", "priority_class": "2", "cell_count": "2186", "area_km2": "21.86"}, {"COUNTYNAME": "嘉義市", "priority_class": "3", "cell_count": "1140", "area_km2": "11.4"}, {"COUNTYNAME": "嘉義市", "priority_class": "4", "cell_count": "926", "area_km2": "9.26"}, {"COUNTYNAME": "嘉義市", "priority_class": "5", "cell_count": "158", "area_km2": "1.58"}, {"COUNTYNAME": "嘉義縣", "priority_class": "0", "cell_count": "0", "area_km2": "0.0"}, {"COUNTYNAME": "嘉義縣", "priority_class": "1", "cell_count": "4380", "area_km2": "43.800000000000004"}, {"COUNTYNAME": "嘉義縣", "priority_class": "2", "cell_count": "29090", "area_km2": "290.90000000000003"}, {"COUNTYNAME": "嘉義縣", "priority_class": "3", "cell_count": "6011", "area_km2": "60.11"}, {"COUNTYNAME": "嘉義縣", "priority_class": "4", "cell_count": "3095", "area_km2": "30.95"}, {"COUNTYNAME": "嘉義縣", "priority_class": "5", "cell_count": "123", "area_km2": "1.23"}, {"COUNTYNAME": "金門縣", "priority_class": "0", "cell_count": "0", "area_km2": "0.0"}, {"COUNTYNAME": "金門縣", "priority_class": "1", "cell_count": "0", "area_km2": "0.0"}, {"COUNTYNAME": "金門縣", "priority_class": "2", "cell_count": "0", "area_km2": "0.0"}, {"COUNTYNAME": "金門縣", "priority_class": "3", "cell_count": "0", "area_km2": "0.0"}, {"COUNTYNAME": "金門縣", "priority_class": "4", "cell_count": "0", "area_km2": "0.0"}, {"COUNTYNAME": "金門縣", "priority_class": "5", "cell_count": "0", "area_km2": "0.0"}, {"COUNTYNAME": "高雄市", "priority_class": "0", "cell_count": "0", "area_km2": "0.0"}, {"COUNTYNAME": "高雄市", "priority_class": "1", "cell_count": "4417", "area_km2": "44.17"}, {"COUNTYNAME": "高雄市", "priority_class": "2", "cell_count": "35408", "area_km2": "354.08"}, {"COUNTYNAME": "高雄市", "priority_class": "3", "cell_count": "12101", "area_km2": "121.01"}, {"COUNTYNAME": "高雄市", "priority_class": "4", "cell_count": "8073", "area_km2": "80.73"}, {"COUNTYNAME": "高雄市", "priority_class": "5", "cell_count": "905", "area_km2": "9.05"}, {"COUNTYNAME": "臺東縣", "priority_class": "0", "cell_count": "0", "area_km2": "0.0"}, {"COUNTYNAME": "臺東縣", "priority_class": "1", "cell_count": "3727", "area_km2": "37.27"}, {"COUNTYNAME": "臺東縣", "priority_class": "2", "cell_count": "18947", "area_km2": "189.47"}, {"COUNTYNAME": "臺東縣", "priority_class": "3", "cell_count": "3793", "area_km2": "37.93"}, {"COUNTYNAME": "臺東縣", "priority_class": "4", "cell_count": "1896", "area_km2": "18.96"}, {"COUNTYNAME": "臺東縣", "priority_class": "5", "cell_count": "131", "area_km2": "1.31"}, {"COUNTYNAME": "花蓮縣", "priority_class": "0", "cell_count": "0", "area_km2": "0.0"}, {"COUNTYNAME": "花蓮縣", "priority_class": "1", "cell_count": "6439", "area_km2": "64.39"}, {"COUNTYNAME": "花蓮縣", "priority_class": "2", "cell_count": "18757", "area_km2": "187.57"}, {"COUNTYNAME": "花蓮縣", "priority_class": "3", "cell_count": "3517", "area_km2": "35.17"}, {"COUNTYNAME": "花蓮縣", "priority_class": "4", "cell_count": "1628", "area_km2": "16.28"}, {"COUNTYNAME": "花蓮縣", "priority_class": "5", "cell_count": "149", "area_km2": "1.49"}, {"COUNTYNAME": "澎湖縣", "priority_class": "0", "cell_count": "0", "area_km2": "0.0"}, {"COUNTYNAME": "澎湖縣", "priority_class": "1", "cell_count": "0", "area_km2": "0.0"}, {"COUNTYNAME": "澎湖縣", "priority_class": "2", "cell_count": "0", "area_km2": "0.0"}, {"COUNTYNAME": "澎湖縣", "priority_class": "3", "cell_count": "0", "area_km2": "0.0"}, {"COUNTYNAME": "澎湖縣", "priority_class": "4", "cell_count": "0", "area_km2": "0.0"}, {"COUNTYNAME": "澎湖縣", "priority_class": "5", "cell_count": "0", "area_km2": "0.0"}, {"COUNTYNAME": "新竹市", "priority_class": "0", "cell_count": "0", "area_km2": "0.0"}, {"COUNTYNAME": "新竹市", "priority_class": "1", "cell_count": "0", "area_km2": "0.0"}, {"COUNTYNAME": "新竹市", "priority_class": "2", "cell_count": "4432", "area_km2": "44.32"}, {"COUNTYNAME": "新竹市", "priority_class": "3", "cell_count": "1881", "area_km2": "18.81"}, {"COUNTYNAME": "新竹市", "priority_class": "4", "cell_count": "1401", "area_km2": "14.01"}, {"COUNTYNAME": "新竹市", "priority_class": "5", "cell_count": "203", "area_km2": "2.0300000000000002"}, {"COUNTYNAME": "臺中市", "priority_class": "0", "cell_count": "0", "area_km2": "0.0"}, {"COUNTYNAME": "臺中市", "priority_class": "1", "cell_count": "1653", "area_km2": "16.53"}, {"COUNTYNAME": "臺中市", "priority_class": "2", "cell_count": "34747", "area_km2": "347.47"}, {"COUNTYNAME": "臺中市", "priority_class": "3", "cell_count": "13072", "area_km2": "130.72"}, {"COUNTYNAME": "臺中市", "priority_class": "4", "cell_count": "8646", "area_km2": "86.46000000000001"}, {"COUNTYNAME": "臺中市", "priority_class": "5", "cell_count": "1049", "area_km2": "10.49"}, {"COUNTYNAME": "苗栗縣", "priority_class": "0", "cell_count": "0", "area_km2": "0.0"}, {"COUNTYNAME": "苗栗縣", "priority_class": "1", "cell_count": "5197", "area_km2": "51.97"}, {"COUNTYNAME": "苗栗縣", "priority_class": "2", "cell_count": "24144", "area_km2": "241.44"}, {"COUNTYNAME": "苗栗縣", "priority_class": "3", "cell_count": "4885", "area_km2": "48.85"}, {"COUNTYNAME": "苗栗縣", "priority_class": "4", "cell_count": "2365", "area_km2": "23.650000000000002"}, {"COUNTYNAME": "苗栗縣", "priority_class": "5", "cell_count": "115", "area_km2": "1.1500000000000001"}, {"COUNTYNAME": "新竹縣", "priority_class": "0", "cell_count": "0", "area_km2": "0.0"}, {"COUNTYNAME": "新竹縣", "priority_class": "1", "cell_count": "1843", "area_km2": "18.43"}, {"COUNTYNAME": "新竹縣", "priority_class": "2", "cell_count": "17935", "area_km2": "179.35"}, {"COUNTYNAME": "新竹縣", "priority_class": "3", "cell_count": "4908", "area_km2": "49.08"}, {"COUNTYNAME": "新竹縣", "priority_class": "4", "cell_count": "2993", "area_km2": "29.93"}, {"COUNTYNAME": "新竹縣", "priority_class": "5", "cell_count": "334", "area_km2": "3.34"}], "ranking": [{"COUNTYNAME": "臺北市", "COUNTYID": "A", "COUNTYCODE": "63000", "school_count": "359", "coverage_status": "ok", "county_area_km2_geom": "269.84777252378063", "county_area_km2_raster_mask": "193.34", "overlay_area_km2_total_class1_5": "193.34", "overlay_area_ratio_in_county": "0.7164780283037604", "high_priority_area_km2_class4_5": "68.62", "high_priority_ratio_in_overlay": "0.35491879590358955", "class0_area_km2": "0.0", "class1_area_km2": "0.0", "class2_area_km2": "71.24", "class3_area_km2": "53.480000000000004", "class4_area_km2": "57.83", "class5_area_km2": "10.790000000000001", "tif_path": "county_final/rasters/臺北市_school_heat_priority_5class_within1000m.tif", "png_path": "county_final/png/臺北市_school_heat_priority_5class_within1000m.png", "image_exists": "True"}, {"COUNTYNAME": "嘉義市", "COUNTYID": "I", "COUNTYCODE": "10020", "school_count": "49", "coverage_status": "ok", "county_area_km2_geom": "59.72155146256911", "county_area_km2_raster_mask": "44.1", "overlay_area_km2_total_class1_5": "44.1", "overlay_area_ratio_in_county": "0.7384268981632196", "high_priority_area_km2_class4_5": "10.84", "high_priority_ratio_in_overlay": "0.24580498866213152", "class0_area_km2": "0.0", "class1_area_km2": "0.0", "class2_area_km2": "21.86", "class3_area_km2": "11.4", "class4_area_km2": "9.26", "class5_area_km2": "1.58", "tif_path": "county_final/rasters/嘉義市_school_heat_priority_5class_within1000m.tif", "png_path": "county_final/png/嘉義市_school_heat_priority_5class_within1000m.png", "image_exists": "True"}, {"COUNTYNAME": "基隆市", "COUNTYID": "C", "COUNTYCODE": "10017", "school_count": "72", "coverage_status": "ok", "county_area_km2_geom": "137.5702673707708", "county_area_km2_raster_mask": "73.29", "overlay_area_km2_total_class1_5": "73.29", "overlay_area_ratio_in_county": "0.5327459297761875", "high_priority_area_km2_class4_5": "15.78", "high_priority_ratio_in_overlay": "0.21530904625460498", "class0_area_km2": "0.0", "class1_area_km2": "0.0", "class2_area_km2": "39.480000000000004", "class3_area_km2": "18.03", "class4_area_km2": "13.6", "class5_area_km2": "2.18", "tif_path": "county_final/rasters/基隆市_school_heat_priority_5class_within1000m.tif", "png_path": "county_final/png/基隆市_school_heat_priority_5class_within1000m.png", "image_exists": "True"}, {"COUNTYNAME": "新竹市", "COUNTYID": "O", "COUNTYCODE": "10018", "school_count": "72", "coverage_status": "ok", "county_area_km2_geom": "124.43876140114183", "county_area_km2_raster_mask": "79.17", "overlay_area_km2_total_class1_5": "79.17", "overlay_area_ratio_in_county": "0.6362165543000459", "high_priority_area_km2_class4_5": "16.04", "high_priority_ratio_in_overlay": "0.20260199570544396", "class0_area_km2": "0.0", "class1_area_km2": "0.0", "class2_area_km2": "44.32", "class3_area_km2": "18.81", "class4_area_km2": "14.01", "class5_area_km2": "2.0300000000000002", "tif_path": "county_final/rasters/新竹市_school_heat_priority_5class_within1000m.tif", "png_path": "county_final/png/新竹市_school_heat_priority_5class_within1000m.png", "image_exists": "True"}, {"COUNTYNAME": "新北市", "COUNTYID": "F", "COUNTYCODE": "65000", "school_count": "393", "coverage_status": "ok", "county_area_km2_geom": "2066.2625748141118", "county_area_km2_raster_mask": "514.0", "overlay_area_km2_total_class1_5": "514.0", "overlay_area_ratio_in_county": "0.24875831671405133", "high_priority_area_km2_class4_5": "86.53", "high_priority_ratio_in_overlay": "0.16834630350194552", "class0_area_km2": "0.0", "class1_area_km2": "1.7", "class2_area_km2": "314.37", "class3_area_km2": "111.4", "class4_area_km2": "76.48", "class5_area_km2": "10.05", "tif_path": "county_final/rasters/新北市_school_heat_priority_5class_within1000m.tif", "png_path": "county_final/png/新北市_school_heat_priority_5class_within1000m.png", "image_exists": "True"}, {"COUNTYNAME": "臺中市", "COUNTYID": "B", "COUNTYCODE": "66000", "school_count": "418", "coverage_status": "ok", "county_area_km2_geom": "2239.684439573994", "county_area_km2_raster_mask": "591.67", "overlay_area_km2_total_class1_5": "591.67", "overlay_area_ratio_in_county": "0.2641756086462521", "high_priority_area_km2_class4_5": "96.95", "high_priority_ratio_in_overlay": "0.16385823178460968", "class0_area_km2": "0.0", "class1_area_km2": "16.53", "class2_area_km2": "347.47", "class3_area_km2": "130.72", "class4_area_km2": "86.46000000000001", "class5_area_km2": "10.49", "tif_path": "county_final/rasters/臺中市_school_heat_priority_5class_within1000m.tif", "png_path": "county_final/png/臺中市_school_heat_priority_5class_within1000m.png", "image_exists": "True"}, {"COUNTYNAME": "桃園市", "COUNTYID": "H", "COUNTYCODE": "68000", "school_count": "308", "coverage_status": "ok", "county_area_km2_geom": "1217.2210398474836", "county_area_km2_raster_mask": "496.42", "overlay_area_km2_total_class1_5": "496.42", "overlay_area_ratio_in_county": "0.40783061066887316", "high_priority_area_km2_class4_5": "74.21", "high_priority_ratio_in_overlay": "0.14949035091253374", "class0_area_km2": "0.0", "class1_area_km2": "13.21", "class2_area_km2": "308.67", "class3_area_km2": "100.33", "class4_area_km2": "66.24", "class5_area_km2": "7.97", "tif_path": "county_final/rasters/桃園市_school_heat_priority_5class_within1000m.tif", "png_path": "county_final/png/桃園市_school_heat_priority_5class_within1000m.png", "image_exists": "True"}, {"COUNTYNAME": "高雄市", "COUNTYID": "E", "COUNTYCODE": "64000", "school_count": "420", "coverage_status": "ok", "county_area_km2_geom": "2998.4883053316876", "county_area_km2_raster_mask": "609.04", "overlay_area_km2_total_class1_5": "609.04", "overlay_area_ratio_in_county": "0.20311568296499627", "high_priority_area_km2_class4_5": "89.78", "high_priority_ratio_in_overlay": "0.14741232102981744", "class0_area_km2": "0.0", "class1_area_km2": "44.17", "class2_area_km2": "354.08", "class3_area_km2": "121.01", "class4_area_km2": "80.73", "class5_area_km2": "9.05", "tif_path": "county_final/rasters/高雄市_school_heat_priority_5class_within1000m.tif", "png_path": "county_final/png/高雄市_school_heat_priority_5class_within1000m.png", "image_exists": "True"}, {"COUNTYNAME": "臺南市", "COUNTYID": "D", "COUNTYCODE": "67000", "school_count": "371", "coverage_status": "ok", "county_area_km2_geom": "2258.786646473204", "county_area_km2_raster_mask": "672.16", "overlay_area_km2_total_class1_5": "672.16", "overlay_area_ratio_in_county": "0.2975756922635826", "high_priority_area_km2_class4_5": "88.62", "high_priority_ratio_in_overlay": "0.13184360866460368", "class0_area_km2": "0.0", "class1_area_km2": "3.77", "class2_area_km2": "448.81", "class3_area_km2": "130.96", "class4_area_km2": "78.92", "class5_area_km2": "9.700000000000001", "tif_path": "county_final/rasters/臺南市_school_heat_priority_5class_within1000m.tif", "png_path": "county_final/png/臺南市_school_heat_priority_5class_within1000m.png", "image_exists": "True"}, {"COUNTYNAME": "彰化縣", "COUNTYID": "N", "COUNTYCODE": "10007", "school_count": "249", "coverage_status": "ok", "county_area_km2_geom": "1244.545704357776", "county_area_km2_raster_mask": "512.5", "overlay_area_km2_total_class1_5": "512.5", "overlay_area_ratio_in_county": "0.4117968494089703", "high_priority_area_km2_class4_5": "64.60000000000001", "high_priority_ratio_in_overlay": "0.1260487804878049", "class0_area_km2": "0.0", "class1_area_km2": "0.0", "class2_area_km2": "349.53000000000003", "class3_area_km2": "98.37", "class4_area_km2": "57.27", "class5_area_km2": "7.33", "tif_path": "county_final/rasters/彰化縣_school_heat_priority_5class_within1000m.tif", "png_path": "county_final/png/彰化縣_school_heat_priority_5class_within1000m.png", "image_exists": "True"}, {"COUNTYNAME": "新竹縣", "COUNTYID": "J", "COUNTYCODE": "10004", "school_count": "149", "coverage_status": "ok", "county_area_km2_geom": "1411.5208351350345", "county_area_km2_raster_mask": "280.13", "overlay_area_km2_total_class1_5": "280.13", "overlay_area_ratio_in_county": "0.19845969894819235", "high_priority_area_km2_class4_5": "33.269999999999996", "high_priority_ratio_in_overlay": "0.1187662870809981", "class0_area_km2": "0.0", "class1_area_km2": "18.43", "class2_area_km2": "179.35", "class3_area_km2": "49.08", "class4_area_km2": "29.93", "class5_area_km2": "3.34", "tif_path": "county_final/rasters/新竹縣_school_heat_priority_5class_within1000m.tif", "png_path": "county_final/png/新竹縣_school_heat_priority_5class_within1000m.png", "image_exists": "True"}, {"COUNTYNAME": "宜蘭縣", "COUNTYID": "G", "COUNTYCODE": "10002", "school_count": "133", "coverage_status": "ok", "county_area_km2_geom": "2201.4504087243513", "county_area_km2_raster_mask": "258.11", "overlay_area_km2_total_class1_5": "258.11", "overlay_area_ratio_in_county": "0.11724543009331925", "high_priority_area_km2_class4_5": "29.07", "high_priority_ratio_in_overlay": "0.112626399597071", "class0_area_km2": "0.0", "class1_area_km2": "10.35", "class2_area_km2": "173.14000000000001", "class3_area_km2": "45.550000000000004", "class4_area_km2": "26.62", "class5_area_km2": "2.45", "tif_path": "county_final/rasters/宜蘭縣_school_heat_priority_5class_within1000m.tif", "png_path": "county_final/png/宜蘭縣_school_heat_priority_5class_within1000m.png", "image_exists": "True"}, {"COUNTYNAME": "雲林縣", "COUNTYID": "P", "COUNTYCODE": "10009", "school_count": "233", "coverage_status": "ok", "county_area_km2_geom": "1399.5681864432677", "county_area_km2_raster_mask": "518.46", "overlay_area_km2_total_class1_5": "518.46", "overlay_area_ratio_in_county": "0.3704428301686151", "high_priority_area_km2_class4_5": "55.14", "high_priority_ratio_in_overlay": "0.10635343131581992", "class0_area_km2": "0.0", "class1_area_km2": "4.26", "class2_area_km2": "368.14", "class3_area_km2": "90.92", "class4_area_km2": "52.13", "class5_area_km2": "3.0100000000000002", "tif_path": "county_final/rasters/雲林縣_school_heat_priority_5class_within1000m.tif", "png_path": "county_final/png/雲林縣_school_heat_priority_5class_within1000m.png", "image_exists": "True"}, {"COUNTYNAME": "屏東縣", "COUNTYID": "T", "COUNTYCODE": "10013", "school_count": "248", "coverage_status": "ok", "county_area_km2_geom": "2805.0367554745744", "county_area_km2_raster_mask": "529.8", "overlay_area_km2_total_class1_5": "529.8", "overlay_area_ratio_in_county": "0.1888745304196076", "high_priority_area_km2_class4_5": "48.82", "high_priority_ratio_in_overlay": "0.09214798036995094", "class0_area_km2": "0.0", "class1_area_km2": "34.56", "class2_area_km2": "362.36", "class3_area_km2": "84.06", "class4_area_km2": "46.1", "class5_area_km2": "2.72", "tif_path": "county_final/rasters/屏東縣_school_heat_priority_5class_within1000m.tif", "png_path": "county_final/png/屏東縣_school_heat_priority_5class_within1000m.png", "image_exists": "True"}, {"COUNTYNAME": "嘉義縣", "COUNTYID": "Q", "COUNTYCODE": "10010", "school_count": "172", "coverage_status": "ok", "county_area_km2_geom": "1952.750456219499", "county_area_km2_raster_mask": "426.99", "overlay_area_km2_total_class1_5": "426.99", "overlay_area_ratio_in_county": "0.2186608118001147", "high_priority_area_km2_class4_5": "32.18", "high_priority_ratio_in_overlay": "0.07536476264081125", "class0_area_km2": "0.0", "class1_area_km2": "43.800000000000004", "class2_area_km2": "290.90000000000003", "class3_area_km2": "60.11", "class4_area_km2": "30.95", "class5_area_km2": "1.23", "tif_path": "county_final/rasters/嘉義縣_school_heat_priority_5class_within1000m.tif", "png_path": "county_final/png/嘉義縣_school_heat_priority_5class_within1000m.png", "image_exists": "True"}, {"COUNTYNAME": "臺東縣", "COUNTYID": "V", "COUNTYCODE": "10014", "school_count": "144", "coverage_status": "ok", "county_area_km2_geom": "3582.21091690537", "county_area_km2_raster_mask": "284.94", "overlay_area_km2_total_class1_5": "284.94", "overlay_area_ratio_in_county": "0.07954305500418617", "high_priority_area_km2_class4_5": "20.27", "high_priority_ratio_in_overlay": "0.07113778339299502", "class0_area_km2": "0.0", "class1_area_km2": "37.27", "class2_area_km2": "189.47", "class3_area_km2": "37.93", "class4_area_km2": "18.96", "class5_area_km2": "1.31", "tif_path": "county_final/rasters/臺東縣_school_heat_priority_5class_within1000m.tif", "png_path": "county_final/png/臺東縣_school_heat_priority_5class_within1000m.png", "image_exists": "True"}, {"COUNTYNAME": "苗栗縣", "COUNTYID": "K", "COUNTYCODE": "10005", "school_count": "179", "coverage_status": "ok", "county_area_km2_geom": "1826.7514530792116", "county_area_km2_raster_mask": "367.06", "overlay_area_km2_total_class1_5": "367.06", "overlay_area_ratio_in_county": "0.20093592884859937", "high_priority_area_km2_class4_5": "24.8", "high_priority_ratio_in_overlay": "0.06756388601318586", "class0_area_km2": "0.0", "class1_area_km2": "51.97", "class2_area_km2": "241.44", "class3_area_km2": "48.85", "class4_area_km2": "23.650000000000002", "class5_area_km2": "1.1500000000000001", "tif_path": "county_final/rasters/苗栗縣_school_heat_priority_5class_within1000m.tif", "png_path": "county_final/png/苗栗縣_school_heat_priority_5class_within1000m.png", "image_exists": "True"}, {"COUNTYNAME": "花蓮縣", "COUNTYID": "U", "COUNTYCODE": "10015", "school_count": "153", "coverage_status": "ok", "county_area_km2_geom": "4605.284306394628", "county_area_km2_raster_mask": "304.90000000000003", "overlay_area_km2_total_class1_5": "304.90000000000003", "overlay_area_ratio_in_county": "0.06620655310609895", "high_priority_area_km2_class4_5": "17.77", "high_priority_ratio_in_overlay": "0.05828140373893079", "class0_area_km2": "0.0", "class1_area_km2": "64.39", "class2_area_km2": "187.57", "class3_area_km2": "35.17", "class4_area_km2": "16.28", "class5_area_km2": "1.49", "tif_path": "county_final/rasters/花蓮縣_school_heat_priority_5class_within1000m.tif", "png_path": "county_final/png/花蓮縣_school_heat_priority_5class_within1000m.png", "image_exists": "True"}, {"COUNTYNAME": "南投縣", "COUNTYID": "M", "COUNTYCODE": "10008", "school_count": "207", "coverage_status": "ok", "county_area_km2_geom": "4097.729913764787", "county_area_km2_raster_mask": "433.82", "overlay_area_km2_total_class1_5": "433.82", "overlay_area_ratio_in_county": "0.1058683732528941", "high_priority_area_km2_class4_5": "19.35", "high_priority_ratio_in_overlay": "0.04460375270849661", "class0_area_km2": "0.0", "class1_area_km2": "87.64", "class2_area_km2": "277.86", "class3_area_km2": "48.97", "class4_area_km2": "18.02", "class5_area_km2": "1.33", "tif_path": "county_final/rasters/南投縣_school_heat_priority_5class_within1000m.tif", "png_path": "county_final/png/南投縣_school_heat_priority_5class_within1000m.png", "image_exists": "True"}, {"COUNTYNAME": "連江縣", "COUNTYID": "Z", "COUNTYCODE": "09007", "school_count": "2", "coverage_status": "outside_raster", "county_area_km2_geom": "29.735032323048667", "county_area_km2_raster_mask": "0.0", "overlay_area_km2_total_class1_5": "0.0", "overlay_area_ratio_in_county": "", "high_priority_area_km2_class4_5": "0.0", "high_priority_ratio_in_overlay": "", "class0_area_km2": "", "class1_area_km2": "", "class2_area_km2": "", "class3_area_km2": "", "class4_area_km2": "", "class5_area_km2": "", "tif_path": "", "png_path": "", "image_exists": "False"}, {"COUNTYNAME": "金門縣", "COUNTYID": "W", "COUNTYCODE": "09020", "school_count": "0", "coverage_status": "ok", "county_area_km2_geom": "185.0311079967785", "county_area_km2_raster_mask": "0.0", "overlay_area_km2_total_class1_5": "0.0", "overlay_area_ratio_in_county": "0.0", "high_priority_area_km2_class4_5": "0.0", "high_priority_ratio_in_overlay": "", "class0_area_km2": "0.0", "class1_area_km2": "0.0", "class2_area_km2": "0.0", "class3_area_km2": "0.0", "class4_area_km2": "0.0", "class5_area_km2": "0.0", "tif_path": "county_final/rasters/金門縣_school_heat_priority_5class_within1000m.tif", "png_path": "county_final/png/金門縣_school_heat_priority_5class_within1000m.png", "image_exists": "True"}, {"COUNTYNAME": "澎湖縣", "COUNTYID": "X", "COUNTYCODE": "10016", "school_count": "0", "coverage_status": "ok", "county_area_km2_geom": "135.22387062731275", "county_area_km2_raster_mask": "0.0", "overlay_area_km2_total_class1_5": "0.0", "overlay_area_ratio_in_county": "0.0", "high_priority_area_km2_class4_5": "0.0", "high_priority_ratio_in_overlay": "", "class0_area_km2": "0.0", "class1_area_km2": "0.0", "class2_area_km2": "0.0", "class3_area_km2": "0.0", "class4_area_km2": "0.0", "class5_area_km2": "0.0", "tif_path": "county_final/rasters/澎湖縣_school_heat_priority_5class_within1000m.tif", "png_path": "county_final/png/澎湖縣_school_heat_priority_5class_within1000m.png", "image_exists": "True"}], "inventory": [{"file_name": "8b5ee37f-5341-5537-be64-f4838d8489b4.png", "relative_path": "full_taiwan/png/8b5ee37f-5341-5537-be64-f4838d8489b4.png", "type": "national"}, {"file_name": "dog_conflict_heat_5class.png", "relative_path": "full_taiwan/png/dog_conflict_heat_5class.png", "type": "national"}, {"file_name": "high_heat_class4_5_within_school_1000m.png", "relative_path": "full_taiwan/png/high_heat_class4_5_within_school_1000m.png", "type": "national"}, {"file_name": "school_distance_class_5class.png", "relative_path": "full_taiwan/png/school_distance_class_5class.png", "type": "national"}, {"file_name": "school_heat_priority_5class.png", "relative_path": "full_taiwan/png/school_heat_priority_5class.png", "type": "national"}, {"file_name": "school_heat_priority_5class_within1000m.png", "relative_path": "full_taiwan/png/school_heat_priority_5class_within1000m.png", "type": "national"}, {"file_name": "school_heat_risk_score_1to25.png", "relative_path": "full_taiwan/png/school_heat_risk_score_1to25.png", "type": "national"}, {"file_name": "school_heat_risk_score_within1000m.png", "relative_path": "full_taiwan/png/school_heat_risk_score_within1000m.png", "type": "national"}, {"file_name": "南投縣_school_heat_priority_5class_within1000m.png", "relative_path": "county_final/png/南投縣_school_heat_priority_5class_within1000m.png", "type": "county"}, {"file_name": "嘉義市_school_heat_priority_5class_within1000m.png", "relative_path": "county_final/png/嘉義市_school_heat_priority_5class_within1000m.png", "type": "county"}, {"file_name": "嘉義縣_school_heat_priority_5class_within1000m.png", "relative_path": "county_final/png/嘉義縣_school_heat_priority_5class_within1000m.png", "type": "county"}, {"file_name": "基隆市_school_heat_priority_5class_within1000m.png", "relative_path": "county_final/png/基隆市_school_heat_priority_5class_within1000m.png", "type": "county"}, {"file_name": "宜蘭縣_school_heat_priority_5class_within1000m.png", "relative_path": "county_final/png/宜蘭縣_school_heat_priority_5class_within1000m.png", "type": "county"}, {"file_name": "屏東縣_school_heat_priority_5class_within1000m.png", "relative_path": "county_final/png/屏東縣_school_heat_priority_5class_within1000m.png", "type": "county"}, {"file_name": "彰化縣_school_heat_priority_5class_within1000m.png", "relative_path": "county_final/png/彰化縣_school_heat_priority_5class_within1000m.png", "type": "county"}, {"file_name": "新北市_school_heat_priority_5class_within1000m.png", "relative_path": "county_final/png/新北市_school_heat_priority_5class_within1000m.png", "type": "county"}, {"file_name": "新竹市_school_heat_priority_5class_within1000m.png", "relative_path": "county_final/png/新竹市_school_heat_priority_5class_within1000m.png", "type": "county"}, {"file_name": "新竹縣_school_heat_priority_5class_within1000m.png", "relative_path": "county_final/png/新竹縣_school_heat_priority_5class_within1000m.png", "type": "county"}, {"file_name": "桃園市_school_heat_priority_5class_within1000m.png", "relative_path": "county_final/png/桃園市_school_heat_priority_5class_within1000m.png", "type": "county"}, {"file_name": "澎湖縣_school_heat_priority_5class_within1000m.png", "relative_path": "county_final/png/澎湖縣_school_heat_priority_5class_within1000m.png", "type": "county"}, {"file_name": "臺中市_school_heat_priority_5class_within1000m.png", "relative_path": "county_final/png/臺中市_school_heat_priority_5class_within1000m.png", "type": "county"}, {"file_name": "臺北市_school_heat_priority_5class_within1000m.png", "relative_path": "county_final/png/臺北市_school_heat_priority_5class_within1000m.png", "type": "county"}, {"file_name": "臺南市_school_heat_priority_5class_within1000m.png", "relative_path": "county_final/png/臺南市_school_heat_priority_5class_within1000m.png", "type": "county"}, {"file_name": "臺東縣_school_heat_priority_5class_within1000m.png", "relative_path": "county_final/png/臺東縣_school_heat_priority_5class_within1000m.png", "type": "county"}, {"file_name": "花蓮縣_school_heat_priority_5class_within1000m.png", "relative_path": "county_final/png/花蓮縣_school_heat_priority_5class_within1000m.png", "type": "county"}, {"file_name": "苗栗縣_school_heat_priority_5class_within1000m.png", "relative_path": "county_final/png/苗栗縣_school_heat_priority_5class_within1000m.png", "type": "county"}, {"file_name": "金門縣_school_heat_priority_5class_within1000m.png", "relative_path": "county_final/png/金門縣_school_heat_priority_5class_within1000m.png", "type": "county"}, {"file_name": "雲林縣_school_heat_priority_5class_within1000m.png", "relative_path": "county_final/png/雲林縣_school_heat_priority_5class_within1000m.png", "type": "county"}, {"file_name": "高雄市_school_heat_priority_5class_within1000m.png", "relative_path": "county_final/png/高雄市_school_heat_priority_5class_within1000m.png", "type": "county"}, {"file_name": "county__南投縣_school_heat_priority_5class_within1000m.png", "relative_path": "all_png/county__南投縣_school_heat_priority_5class_within1000m.png", "type": "all_png"}, {"file_name": "county__嘉義市_school_heat_priority_5class_within1000m.png", "relative_path": "all_png/county__嘉義市_school_heat_priority_5class_within1000m.png", "type": "all_png"}, {"file_name": "county__嘉義縣_school_heat_priority_5class_within1000m.png", "relative_path": "all_png/county__嘉義縣_school_heat_priority_5class_within1000m.png", "type": "all_png"}, {"file_name": "county__基隆市_school_heat_priority_5class_within1000m.png", "relative_path": "all_png/county__基隆市_school_heat_priority_5class_within1000m.png", "type": "all_png"}, {"file_name": "county__宜蘭縣_school_heat_priority_5class_within1000m.png", "relative_path": "all_png/county__宜蘭縣_school_heat_priority_5class_within1000m.png", "type": "all_png"}, {"file_name": "county__屏東縣_school_heat_priority_5class_within1000m.png", "relative_path": "all_png/county__屏東縣_school_heat_priority_5class_within1000m.png", "type": "all_png"}, {"file_name": "county__彰化縣_school_heat_priority_5class_within1000m.png", "relative_path": "all_png/county__彰化縣_school_heat_priority_5class_within1000m.png", "type": "all_png"}, {"file_name": "county__新北市_school_heat_priority_5class_within1000m.png", "relative_path": "all_png/county__新北市_school_heat_priority_5class_within1000m.png", "type": "all_png"}, {"file_name": "county__新竹市_school_heat_priority_5class_within1000m.png", "relative_path": "all_png/county__新竹市_school_heat_priority_5class_within1000m.png", "type": "all_png"}, {"file_name": "county__新竹縣_school_heat_priority_5class_within1000m.png", "relative_path": "all_png/county__新竹縣_school_heat_priority_5class_within1000m.png", "type": "all_png"}, {"file_name": "county__桃園市_school_heat_priority_5class_within1000m.png", "relative_path": "all_png/county__桃園市_school_heat_priority_5class_within1000m.png", "type": "all_png"}, {"file_name": "county__澎湖縣_school_heat_priority_5class_within1000m.png", "relative_path": "all_png/county__澎湖縣_school_heat_priority_5class_within1000m.png", "type": "all_png"}, {"file_name": "county__臺中市_school_heat_priority_5class_within1000m.png", "relative_path": "all_png/county__臺中市_school_heat_priority_5class_within1000m.png", "type": "all_png"}, {"file_name": "county__臺北市_school_heat_priority_5class_within1000m.png", "relative_path": "all_png/county__臺北市_school_heat_priority_5class_within1000m.png", "type": "all_png"}, {"file_name": "county__臺南市_school_heat_priority_5class_within1000m.png", "relative_path": "all_png/county__臺南市_school_heat_priority_5class_within1000m.png", "type": "all_png"}, {"file_name": "county__臺東縣_school_heat_priority_5class_within1000m.png", "relative_path": "all_png/county__臺東縣_school_heat_priority_5class_within1000m.png", "type": "all_png"}, {"file_name": "county__花蓮縣_school_heat_priority_5class_within1000m.png", "relative_path": "all_png/county__花蓮縣_school_heat_priority_5class_within1000m.png", "type": "all_png"}, {"file_name": "county__苗栗縣_school_heat_priority_5class_within1000m.png", "relative_path": "all_png/county__苗栗縣_school_heat_priority_5class_within1000m.png", "type": "all_png"}, {"file_name": "county__金門縣_school_heat_priority_5class_within1000m.png", "relative_path": "all_png/county__金門縣_school_heat_priority_5class_within1000m.png", "type": "all_png"}, {"file_name": "county__雲林縣_school_heat_priority_5class_within1000m.png", "relative_path": "all_png/county__雲林縣_school_heat_priority_5class_within1000m.png", "type": "all_png"}, {"file_name": "county__高雄市_school_heat_priority_5class_within1000m.png", "relative_path": "all_png/county__高雄市_school_heat_priority_5class_within1000m.png", "type": "all_png"}, {"file_name": "full__8b5ee37f-5341-5537-be64-f4838d8489b4.png", "relative_path": "all_png/full__8b5ee37f-5341-5537-be64-f4838d8489b4.png", "type": "all_png"}, {"file_name": "full__dog_conflict_heat_5class.png", "relative_path": "all_png/full__dog_conflict_heat_5class.png", "type": "all_png"}, {"file_name": "full__high_heat_class4_5_within_school_1000m.png", "relative_path": "all_png/full__high_heat_class4_5_within_school_1000m.png", "type": "all_png"}, {"file_name": "full__school_distance_class_5class.png", "relative_path": "all_png/full__school_distance_class_5class.png", "type": "all_png"}, {"file_name": "full__school_heat_priority_5class.png", "relative_path": "all_png/full__school_heat_priority_5class.png", "type": "all_png"}, {"file_name": "full__school_heat_priority_5class_within1000m.png", "relative_path": "all_png/full__school_heat_priority_5class_within1000m.png", "type": "all_png"}, {"file_name": "full__school_heat_risk_score_1to25.png", "relative_path": "all_png/full__school_heat_risk_score_1to25.png", "type": "all_png"}, {"file_name": "full__school_heat_risk_score_within1000m.png", "relative_path": "all_png/full__school_heat_risk_score_within1000m.png", "type": "all_png"}], "countyImages": {"南投縣": "county_final/png/南投縣_school_heat_priority_5class_within1000m.png", "嘉義市": "county_final/png/嘉義市_school_heat_priority_5class_within1000m.png", "嘉義縣": "county_final/png/嘉義縣_school_heat_priority_5class_within1000m.png", "基隆市": "county_final/png/基隆市_school_heat_priority_5class_within1000m.png", "宜蘭縣": "county_final/png/宜蘭縣_school_heat_priority_5class_within1000m.png", "屏東縣": "county_final/png/屏東縣_school_heat_priority_5class_within1000m.png", "彰化縣": "county_final/png/彰化縣_school_heat_priority_5class_within1000m.png", "新北市": "county_final/png/新北市_school_heat_priority_5class_within1000m.png", "新竹市": "county_final/png/新竹市_school_heat_priority_5class_within1000m.png", "新竹縣": "county_final/png/新竹縣_school_heat_priority_5class_within1000m.png", "桃園市": "county_final/png/桃園市_school_heat_priority_5class_within1000m.png", "澎湖縣": "county_final/png/澎湖縣_school_heat_priority_5class_within1000m.png", "臺中市": "county_final/png/臺中市_school_heat_priority_5class_within1000m.png", "臺北市": "county_final/png/臺北市_school_heat_priority_5class_within1000m.png", "臺南市": "county_final/png/臺南市_school_heat_priority_5class_within1000m.png", "臺東縣": "county_final/png/臺東縣_school_heat_priority_5class_within1000m.png", "花蓮縣": "county_final/png/花蓮縣_school_heat_priority_5class_within1000m.png", "苗栗縣": "county_final/png/苗栗縣_school_heat_priority_5class_within1000m.png", "金門縣": "county_final/png/金門縣_school_heat_priority_5class_within1000m.png", "雲林縣": "county_final/png/雲林縣_school_heat_priority_5class_within1000m.png", "高雄市": "county_final/png/高雄市_school_heat_priority_5class_within1000m.png"}, "nationalImages": {"dog_heat": "full_taiwan/png/dog_conflict_heat_5class.png", "school_distance": "full_taiwan/png/school_distance_class_5class.png", "risk_score": "full_taiwan/png/school_heat_risk_score_within1000m.png", "priority": "full_taiwan/png/school_heat_priority_5class_within1000m.png", "high_heat": "full_taiwan/png/high_heat_class4_5_within_school_1000m.png"}};
 
     const taiwanLayers = [
-      {
-        id: "dog_heat",
-        name: "人犬衝突熱區五級",
-        path: "full_taiwan/png/dog_conflict_heat_5class.png",
-        file: "dog_conflict_heat_5class.png",
-        desc: "呈現人犬衝突熱區強度分級。"
-      },
-      {
-        id: "school_distance",
-        name: "學校距離分級",
-        path: "full_taiwan/png/school_distance_class_5class.png",
-        file: "school_distance_class_5class.png",
-        desc: "呈現距離學校遠近的周邊敏感程度。"
-      },
-      {
-        id: "risk_score",
-        name: "學校周邊風險分數",
-        path: "full_taiwan/png/school_heat_risk_score_within1000m.png",
-        file: "school_heat_risk_score_within1000m.png",
-        desc: "將學校距離與熱區強度整合後形成的風險分數。"
-      },
-      {
-        id: "priority",
-        name: "學校周邊優先性五級",
-        path: "full_taiwan/png/school_heat_priority_5class_within1000m.png",
-        file: "school_heat_priority_5class_within1000m.png",
-        desc: "同時考量學校距離與熱區強度，形成第 1 級至第 5 級優先關注區。"
-      },
-      {
-        id: "high_heat",
-        name: "學校 1000m 內高熱區",
-        path: "full_taiwan/png/high_heat_class4_5_within_school_1000m.png",
-        file: "high_heat_class4_5_within_school_1000m.png",
-        desc: "聚焦學校 1000m 內第 4、5 級高熱區。"
-      }
+      { id: "dog_heat", name: "人犬衝突熱區五級", path: SITE_DATA.nationalImages.dog_heat, desc: "呈現人犬衝突熱區強度分級。" },
+      { id: "school_distance", name: "學校距離分級", path: SITE_DATA.nationalImages.school_distance, desc: "呈現距離學校遠近的周邊敏感程度。" },
+      { id: "risk_score", name: "學校周邊風險分數", path: SITE_DATA.nationalImages.risk_score, desc: "將學校距離與熱區強度整合後形成的風險分數。" },
+      { id: "priority", name: "學校周邊優先性五級", path: SITE_DATA.nationalImages.priority, desc: "同時考量學校距離與熱區強度，形成第 1 級至第 5 級優先關注區。" },
+      { id: "high_heat", name: "學校 1000m 內高熱區", path: SITE_DATA.nationalImages.high_heat, desc: "聚焦學校 1000m 內第 4、5 級高熱區。" }
     ];
 
-    const state = {
-      mode: "national",
-      currentLayer: "priority",
-      selectedCounty: "",
-      summary: [],
-      classLong: [],
-      ranking: [],
-      inventory: [],
-      sortKey: "high_priority_ratio_in_overlay"
+    const nationalState = { currentLayer: "priority" };
+    const countyState = { selectedCounty: "", sortKey: "high_priority_ratio_in_overlay" };
+
+    const dataStore = {
+      summary: SITE_DATA.summary,
+      classLong: SITE_DATA.classLong,
+      ranking: SITE_DATA.ranking,
+      inventory: SITE_DATA.inventory,
+      countyImages: SITE_DATA.countyImages,
+      nationalImages: SITE_DATA.nationalImages
     };
 
     const els = {
-      layerList: document.getElementById("layerList"),
-      mainMapImg: document.getElementById("mainMapImg"),
       heroMapImg: document.getElementById("heroMapImg"),
-      mainMapFrame: document.getElementById("mainMapFrame"),
       heroMapFrame: document.getElementById("heroMapFrame"),
-      mainMapTitle: document.getElementById("mainMapTitle"),
-      mainMapCaption: document.getElementById("mainMapCaption"),
-      heroMapTitle: document.getElementById("heroMapTitle"),
-      heroMapCaption: document.getElementById("heroMapCaption"),
-      mainStatusPill: document.getElementById("mainStatusPill"),
-      heroModePill: document.getElementById("heroModePill"),
-      countySelect: document.getElementById("countySelect"),
-      heroCountySelect: document.getElementById("heroCountySelect"),
+      nationalLayerList: document.getElementById("nationalLayerList"),
+      nationalMapImg: document.getElementById("nationalMapImg"),
+      nationalMapFrame: document.getElementById("nationalMapFrame"),
+      nationalMapTitle: document.getElementById("nationalMapTitle"),
+      nationalMapCaption: document.getElementById("nationalMapCaption"),
+      nationalMapNote: document.getElementById("nationalMapNote"),
       rankingList: document.getElementById("rankingList"),
       sortSelect: document.getElementById("sortSelect"),
-      classChart: document.getElementById("classChart"),
-      classChartTitle: document.getElementById("classChartTitle"),
+      countySelect: document.getElementById("countySelect"),
+      countyMapImg: document.getElementById("countyMapImg"),
+      countyMapFrame: document.getElementById("countyMapFrame"),
+      countyMapTitle: document.getElementById("countyMapTitle"),
+      countyMapCaption: document.getElementById("countyMapCaption"),
+      countyStatusPill: document.getElementById("countyStatusPill"),
+      countyMapNote: document.getElementById("countyMapNote"),
       metricTitle: document.getElementById("metricTitle"),
       metricCaption: document.getElementById("metricCaption"),
       autoInsight: document.getElementById("autoInsight"),
-      mapNote: document.getElementById("mapNote"),
-      heroConclusion: document.getElementById("heroConclusion"),
+      classChart: document.getElementById("classChart"),
+      classChartTitle: document.getElementById("classChartTitle"),
       summaryCountyCount: document.getElementById("summaryCountyCount"),
       summarySchoolCount: document.getElementById("summarySchoolCount"),
       summaryHighRatio: document.getElementById("summaryHighRatio"),
+      heroConclusion: document.getElementById("heroConclusion"),
       mSchool: document.getElementById("mSchool"),
       mOverlay: document.getElementById("mOverlay"),
       mHighArea: document.getElementById("mHighArea"),
@@ -1175,103 +1151,13 @@
       mOverlayRatio: document.getElementById("mOverlayRatio")
     };
 
-    function parseCSV(text) {
-      const cleanText = String(text || "").replace(/^\uFEFF/, "");
-      const rows = [];
-      let row = [];
-      let cell = "";
-      let quote = false;
-
-      for (let i = 0; i < cleanText.length; i++) {
-        const ch = cleanText[i];
-        const next = cleanText[i + 1];
-
-        if (ch === '"' && quote && next === '"') {
-          cell += '"';
-          i++;
-        } else if (ch === '"') {
-          quote = !quote;
-        } else if (ch === "," && !quote) {
-          row.push(cell);
-          cell = "";
-        } else if ((ch === "\n" || ch === "\r") && !quote) {
-          if (ch === "\r" && next === "\n") i++;
-          row.push(cell);
-          if (row.some(v => String(v).trim() !== "")) rows.push(row);
-          row = [];
-          cell = "";
-        } else {
-          cell += ch;
-        }
-      }
-
-      row.push(cell);
-      if (row.some(v => String(v).trim() !== "")) rows.push(row);
-
-      if (!rows.length) return [];
-      const headers = rows.shift().map(h => String(h).trim().replace(/^\uFEFF/, ""));
-      return rows.map(values => {
-        const obj = {};
-        headers.forEach((h, idx) => {
-          obj[h] = String(values[idx] ?? "").trim();
-        });
-        return obj;
-      });
-    }
-
-    async function loadFirstAvailable(paths) {
-      let lastError = null;
-      for (const path of paths) {
-        try {
-          const response = await fetch(path, { cache: "no-store" });
-          if (!response.ok) throw new Error("not found");
-          const text = await response.text();
-          const parsed = parseCSV(text);
-          if (parsed.length || text.trim()) return parsed;
-        } catch (error) {
-          lastError = error;
-        }
-      }
-      throw lastError || new Error("table unavailable");
-    }
-
-    function loadEmbeddedData() {
-      const el = document.getElementById("embedded-data");
-      if (!el) return null;
-      try {
-        return JSON.parse(el.textContent || "{}");
-      } catch (error) {
-        return null;
-      }
-    }
-
-    async function loadAllData() {
-      const embedded = loadEmbeddedData();
-      if (embedded && Array.isArray(embedded.summary) && embedded.summary.length) {
-        state.summary = embedded.summary;
-        state.classLong = Array.isArray(embedded.classLong) ? embedded.classLong : [];
-        // 排名直接由同一份縣市摘要資料產生，避免排名資料與縣市圖片來源不同步。
-        state.ranking = state.summary.slice().sort((a, b) => num(b.high_priority_ratio_in_overlay) - num(a.high_priority_ratio_in_overlay));
-        state.inventory = Array.isArray(embedded.inventory) ? embedded.inventory : [];
-        return;
-      }
-
-      const [summary, classLong, ranking, inventory] = await Promise.all([
-        loadFirstAvailable(tableSources.summary),
-        loadFirstAvailable(tableSources.classLong),
-        loadFirstAvailable(tableSources.ranking),
-        loadFirstAvailable(tableSources.inventory)
-      ]);
-
-      state.summary = summary;
-      state.classLong = classLong;
-      state.ranking = summary.slice().sort((a, b) => num(b.high_priority_ratio_in_overlay) - num(a.high_priority_ratio_in_overlay));
-      state.inventory = inventory;
-    }
+    function text(value) { return String(value ?? "").trim(); }
+    function countyKey(value) { return text(value).replace(/臺/g, "台"); }
+    function cleanPath(path) { return text(path).replaceAll("\\", "/").replace(/^\.?\//, ""); }
+    function isOutside(row) { return row && text(row.coverage_status) === "outside_raster"; }
 
     function num(value) {
-      if (value === undefined || value === null || value === "") return 0;
-      const n = Number(String(value).replace(/,/g, ""));
+      const n = Number(text(value).replace(/,/g, ""));
       return Number.isFinite(n) ? n : 0;
     }
 
@@ -1286,186 +1172,156 @@
     }
 
     function fmtCount(value) {
-      const n = Math.round(num(value));
-      return n.toLocaleString("zh-TW") + " 所";
+      return Math.round(num(value)).toLocaleString("zh-TW") + " 所";
     }
 
-    function cleanPath(path) {
-      return String(path || "").replaceAll("\\", "/").replace(/^\.?\//, "");
+    function getByCounty(rows, name) {
+      const key = countyKey(name);
+      return rows.find(row => countyKey(row.COUNTYNAME) === key) || null;
     }
 
-    function isOutside(row) {
-      return row && row.coverage_status === "outside_raster";
+    function selectedCountyRow() {
+      return getByCounty(dataStore.summary, countyState.selectedCounty);
     }
 
-    function getLayer() {
-      return taiwanLayers.find(layer => layer.id === state.currentLayer) || taiwanLayers[3];
-    }
-
-    function getSelectedCountyRow() {
-      return state.summary.find(row => row.COUNTYNAME === state.selectedCounty) || null;
-    }
-
-    function findInventoryPath(fileName) {
-      const found = state.inventory.find(item => {
-        const itemFile = item.file_name || "";
-        const itemPath = cleanPath(item.relative_path || "");
-        return itemFile === fileName || itemPath.endsWith(fileName);
-      });
-      return cleanPath(found?.relative_path || "");
-    }
-
-    function layerImagePath(layer) {
-      // 全臺圖層一律讀取 full_taiwan/png，避免 all_png 的前綴檔名造成判讀混淆。
-      return layer.path;
+    function currentNationalLayer() {
+      return taiwanLayers.find(layer => layer.id === nationalState.currentLayer) || taiwanLayers.find(layer => layer.id === "priority") || taiwanLayers[0];
     }
 
     function countyImagePath(row) {
-      if (!row) return "";
-      const countyName = String(row.COUNTYNAME || "").trim();
-      // 縣市圖一律用縣市名稱建立固定路徑，確保統計卡與圖片使用同一個 COUNTYNAME 對應。
-      const expected = countyName ? `county_final/png/${countyName}_school_heat_priority_5class_within1000m.png` : "";
-      return expected || cleanPath(row.png_path);
+      if (!row || isOutside(row)) return "";
+      const name = text(row.COUNTYNAME);
+      if (dataStore.countyImages[name]) return dataStore.countyImages[name];
+      const key = Object.keys(dataStore.countyImages).find(k => countyKey(k) === countyKey(name));
+      if (key) return dataStore.countyImages[key];
+      const fromSummary = cleanPath(row.png_path);
+      if (fromSummary) return fromSummary;
+      return `county_final/png/${name}_school_heat_priority_5class_within1000m.png`;
     }
 
     function setMapImage(img, frame, src, alt, noResult = false) {
+      if (!img || !frame) return;
       frame.classList.remove("failed", "no-map");
       img.onerror = () => frame.classList.add("failed");
       img.onload = () => frame.classList.remove("failed");
-
       if (noResult || !src) {
         img.removeAttribute("src");
         img.alt = alt || "";
         frame.classList.add("no-map");
         return;
       }
-
-      // 針對中文縣市檔名進行 URL 編碼，讓 GitHub Pages 與瀏覽器穩定讀取。
-      img.src = encodeURI(cleanPath(src));
+      img.src = cleanPath(src);
       img.alt = alt || "";
     }
 
-    function renderLayerList() {
-      els.layerList.innerHTML = taiwanLayers.map(layer => `
-        <button type="button" class="layer-btn ${layer.id === state.currentLayer ? "is-active" : ""}" data-layer="${layer.id}">
-          <strong>${layer.name}</strong>
-          <span>${layer.desc}</span>
-        </button>
-      `).join("");
-
-      els.layerList.querySelectorAll("[data-layer]").forEach(button => {
-        button.addEventListener("click", () => {
-          state.currentLayer = button.dataset.layer;
-          state.mode = "national";
-          updateModeButtons();
-          renderAll();
-        });
-      });
-    }
-
-    function chooseDefaultCounty() {
-      const valid = state.summary
-        .filter(row => !isOutside(row))
-        .sort((a, b) => num(b.high_priority_ratio_in_overlay) - num(a.high_priority_ratio_in_overlay));
-      state.selectedCounty = valid[0]?.COUNTYNAME || state.summary[0]?.COUNTYNAME || "";
-    }
-
-    function renderCountyOptions() {
-      if (!state.summary.length) {
-        const empty = `<option value="">統計資料暫時無法顯示</option>`;
-        els.countySelect.innerHTML = empty;
-        els.heroCountySelect.innerHTML = empty;
-        return;
-      }
-
-      const rows = state.summary
-        .slice()
-        .sort((a, b) => String(a.COUNTYNAME || "").localeCompare(String(b.COUNTYNAME || ""), "zh-Hant"));
-
-      const options = rows.map(row => `<option value="${row.COUNTYNAME}">${row.COUNTYNAME}</option>`).join("");
-      const defaultOption = `<option value="">選擇縣市成果</option>`;
-      els.countySelect.innerHTML = defaultOption + options;
-      els.heroCountySelect.innerHTML = defaultOption + options;
-      syncCountySelects();
-    }
-
-    function renderNationalSummary() {
-      if (!state.summary.length) {
-        els.summaryCountyCount.textContent = "—";
-        els.summarySchoolCount.textContent = "—";
-        els.summaryHighRatio.textContent = "—";
-        els.heroConclusion.textContent = "目前統計資料暫時無法顯示，請確認資料檔案已放置於指定資料夾。";
-        return;
-      }
-
-      const usable = state.summary.filter(row => !isOutside(row));
-      const countyCount = state.summary.length;
-      const schools = state.summary.reduce((sum, row) => sum + num(row.school_count), 0);
-      const avgHigh = usable.length
-        ? usable.reduce((sum, row) => sum + num(row.high_priority_ratio_in_overlay), 0) / usable.length
-        : 0;
+    function renderHeroSummary() {
+      const usable = dataStore.summary.filter(row => !isOutside(row));
+      const countyCount = dataStore.summary.length;
+      const schools = dataStore.summary.reduce((sum, row) => sum + num(row.school_count), 0);
+      const avgHigh = usable.length ? usable.reduce((sum, row) => sum + num(row.high_priority_ratio_in_overlay), 0) / usable.length : 0;
 
       els.summaryCountyCount.textContent = countyCount + " 個";
       els.summarySchoolCount.textContent = Math.round(schools).toLocaleString("zh-TW") + " 所";
       els.summaryHighRatio.textContent = usable.length ? fmtPercent(avgHigh) : "—";
-      els.heroConclusion.textContent = "整體成果可用來比較各縣市學校周邊與人犬衝突熱區的重疊程度；其中高優先區比例較高的縣市，代表套疊區內有較高比例落在第 4、5 級，可優先納入後續巡查與宣導討論。";
+      els.heroConclusion.textContent = "整體成果可用來比較各縣市學校周邊與人犬衝突熱區的重疊程度；其中高優先關注區比例較高的縣市，代表套疊區內有較高比例落在第 4、5 級，可優先納入後續巡查與宣導討論。";
     }
 
-    function renderMap() {
-      if (state.mode === "national") {
-        const layer = getLayer();
-        els.mainMapTitle.textContent = layer.name;
-        els.heroMapTitle.textContent = layer.name;
-        els.mainMapCaption.textContent = layer.desc;
-        els.heroMapCaption.textContent = layer.desc;
-        els.mainStatusPill.textContent = "全臺總覽";
-        els.heroModePill.textContent = "全臺總覽";
-        els.mainStatusPill.classList.add("teal");
-        els.heroModePill.classList.add("teal");
+    function renderNationalLayerList() {
+      els.nationalLayerList.innerHTML = taiwanLayers.map(layer => `
+        <button type="button" class="layer-card ${layer.id === nationalState.currentLayer ? "is-active" : ""}" data-national-layer="${layer.id}">
+          <div class="layer-card-head">
+            <h3>${layer.name}</h3>
+            <span class="layer-badge">全臺圖層</span>
+          </div>
+          <p>${layer.desc}</p>
+        </button>
+      `).join("");
 
-        const path = layerImagePath(layer);
-        setMapImage(els.mainMapImg, els.mainMapFrame, path, layer.name);
-        setMapImage(els.heroMapImg, els.heroMapFrame, path, layer.name);
+      els.nationalLayerList.querySelectorAll("[data-national-layer]").forEach(button => {
+        button.addEventListener("click", () => {
+          nationalState.currentLayer = button.dataset.nationalLayer;
+          renderNationalSection();
+        });
+      });
+    }
 
-        els.mapNote.textContent = "目前顯示全臺分析圖層。可由左側切換不同成果圖，理解熱區、學校距離與優先關注區之間的關係。";
+    function renderNationalSection() {
+      const layer = currentNationalLayer();
+      els.nationalMapTitle.textContent = layer.name;
+      els.nationalMapCaption.textContent = layer.desc;
+      els.nationalMapNote.textContent = "目前顯示「" + layer.name + "」。此操作只更新全臺分析圖，不會重置下方縣市成果。";
+      setMapImage(els.nationalMapImg, els.nationalMapFrame, layer.path, layer.name);
+      const heroLayer = taiwanLayers.find(item => item.id === "priority") || layer;
+      setMapImage(els.heroMapImg, els.heroMapFrame, heroLayer.path, "全臺主要成果圖");
+      renderNationalLayerList();
+    }
+
+    function chooseDefaultCounty() {
+      const valid = dataStore.summary
+        .filter(row => !isOutside(row))
+        .sort((a, b) => num(b.high_priority_ratio_in_overlay) - num(a.high_priority_ratio_in_overlay));
+      countyState.selectedCounty = valid[0]?.COUNTYNAME || dataStore.summary[0]?.COUNTYNAME || "";
+    }
+
+    function renderCountyOptions() {
+      const rows = dataStore.summary
+        .slice()
+        .sort((a, b) => text(a.COUNTYNAME).localeCompare(text(b.COUNTYNAME), "zh-Hant"));
+      els.countySelect.innerHTML = `<option value="">選擇縣市成果</option>` + rows.map(row => `<option value="${row.COUNTYNAME}">${row.COUNTYNAME}</option>`).join("");
+      els.countySelect.value = countyState.selectedCounty || "";
+    }
+
+    function sortedCountyRows() {
+      const key = countyState.sortKey;
+      return dataStore.summary
+        .filter(row => !isOutside(row))
+        .slice()
+        .sort((a, b) => num(b[key]) - num(a[key]));
+    }
+
+    function renderRanking() {
+      const rows = sortedCountyRows().slice(0, 10);
+      if (!rows.length) {
+        els.rankingList.innerHTML = `<div class="friendly-empty">目前尚無可排序的縣市成果。</div>`;
         return;
       }
 
-      const row = getSelectedCountyRow();
-      if (!row) {
-        setMapImage(els.mainMapImg, els.mainMapFrame, "", "縣市成果圖", true);
-        setMapImage(els.heroMapImg, els.heroMapFrame, "", "縣市成果圖", true);
-        return;
-      }
+      const maxRatio = Math.max(...rows.map(row => num(row.high_priority_ratio_in_overlay)), 0.01);
+      els.rankingList.innerHTML = rows.map((row, idx) => {
+        const selected = countyKey(row.COUNTYNAME) === countyKey(countyState.selectedCounty) ? "is-selected" : "";
+        const ratioWidth = Math.max(2, num(row.high_priority_ratio_in_overlay) / maxRatio * 100);
+        return `
+          <article class="rank-row ${selected}" data-county-row="${row.COUNTYNAME}">
+            <div class="rank-no">${String(idx + 1).padStart(2, "0")}</div>
+            <div class="rank-city">
+              <strong>${row.COUNTYNAME || "—"}</strong>
+              <span>${fmtCount(row.school_count)}</span>
+              <div class="ratio-line"><span style="width:${ratioWidth}%"></span></div>
+            </div>
+            <div class="rank-metric">${fmtPercent(row.high_priority_ratio_in_overlay)}<small>高優先關注區比例</small></div>
+            <div class="rank-metric">${fmtArea(row.high_priority_area_km2_class4_5)}<small>高優先關注區面積</small></div>
+            <div class="rank-metric">${Math.round(num(row.school_count)).toLocaleString("zh-TW")}<small>學校數</small></div>
+          </article>
+        `;
+      }).join("");
 
-      const noResult = isOutside(row);
-      const title = `${row.COUNTYNAME}｜縣市最終套疊結果`;
-      const caption = noResult
-        ? "目前此縣市尚無完整分析成果。"
-        : "顯示該縣市學校周邊與人犬衝突熱區的最終套疊結果。";
-
-      els.mainMapTitle.textContent = title;
-      els.heroMapTitle.textContent = title;
-      els.mainMapCaption.textContent = caption;
-      els.heroMapCaption.textContent = caption;
-      els.mainStatusPill.textContent = noResult ? "目前尚無完整成果" : "縣市最終成果";
-      els.heroModePill.textContent = row.COUNTYNAME;
-      els.mainStatusPill.classList.toggle("teal", !noResult);
-      els.heroModePill.classList.toggle("teal", !noResult);
-
-      const path = countyImagePath(row);
-      setMapImage(els.mainMapImg, els.mainMapFrame, path, title, noResult);
-      setMapImage(els.heroMapImg, els.heroMapFrame, path, title, noResult);
-
-      els.mapNote.textContent = noResult
-        ? "目前此縣市尚無完整分析成果，因此不顯示成果圖。"
-        : "縣市成果圖已包含縣市範圍細框線，畫面僅維持原比例呈現，不額外加框或拉伸。";
+      els.rankingList.querySelectorAll("[data-county-row]").forEach(rowEl => {
+        rowEl.addEventListener("click", () => {
+          countyState.selectedCounty = rowEl.dataset.countyRow;
+          renderCountyOptions();
+          renderCountySection();
+          renderRanking();
+          document.getElementById("county-results").scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      });
     }
 
-    function renderMetrics() {
-      const row = getSelectedCountyRow();
-
+    function renderCountySection() {
+      const row = selectedCountyRow();
       if (!row) {
+        els.countyMapTitle.textContent = "縣市最終套疊結果";
+        els.countyMapCaption.textContent = "選擇縣市後顯示該縣市最終套疊結果。";
+        setMapImage(els.countyMapImg, els.countyMapFrame, "", "縣市成果圖", true);
         els.metricTitle.textContent = "縣市統計摘要";
         els.metricCaption.textContent = "切換縣市後同步更新。";
         els.mSchool.textContent = "—";
@@ -1474,89 +1330,64 @@
         els.mHighRatio.textContent = "—";
         els.mOverlayRatio.textContent = "—";
         els.autoInsight.textContent = "選擇縣市後，平台會依統計成果產生白話摘要。";
+        els.classChartTitle.textContent = "優先等級面積圖";
+        els.classChart.innerHTML = `<div class="friendly-empty">選擇縣市後顯示優先等級面積。</div>`;
         return;
       }
 
+      const noResult = isOutside(row);
+      const title = `${row.COUNTYNAME}｜縣市最終套疊結果`;
+      els.countyMapTitle.textContent = title;
+      els.countyMapCaption.textContent = noResult ? "目前此縣市尚無完整分析成果。" : "顯示該縣市學校周邊與人犬衝突熱區的最終套疊結果。";
+      els.countyStatusPill.textContent = noResult ? "目前尚無完整成果" : "縣市最終成果";
+      els.countyStatusPill.classList.toggle("teal", !noResult);
+      els.countyMapNote.textContent = noResult ? "目前此縣市尚無完整分析成果，因此不顯示成果圖。" : "縣市成果圖已包含縣市範圍細框線，畫面僅維持原比例呈現，不額外加框或拉伸。";
+      setMapImage(els.countyMapImg, els.countyMapFrame, countyImagePath(row), title, noResult);
+
       els.metricTitle.textContent = `${row.COUNTYNAME} 統計摘要`;
-      els.metricCaption.textContent = isOutside(row) ? "目前尚無完整分析成果" : "縣市最終成果";
+      els.metricCaption.textContent = noResult ? "目前尚無完整分析成果" : "縣市最終成果";
       els.mSchool.textContent = fmtCount(row.school_count);
       els.mOverlay.textContent = fmtArea(row.overlay_area_km2_total_class1_5);
       els.mHighArea.textContent = fmtArea(row.high_priority_area_km2_class4_5);
       els.mHighRatio.textContent = fmtPercent(row.high_priority_ratio_in_overlay);
       els.mOverlayRatio.textContent = fmtPercent(row.overlay_area_ratio_in_county);
 
-      if (isOutside(row)) {
+      if (noResult) {
         els.autoInsight.textContent = `${row.COUNTYNAME} 目前未落於本次熱區分析範圍內，因此尚無完整套疊成果。後續若補足熱區範圍，可再重新納入分析。`;
       } else if (num(row.school_count) === 0) {
         els.autoInsight.textContent = `${row.COUNTYNAME} 目前於本次學校點位資料中未取得學校點位，因此成果主要作為資料完整性檢視。後續建議補齊學校點位後再進行完整分析。`;
       } else {
-        els.autoInsight.textContent = `本縣市共有 ${Math.round(num(row.school_count)).toLocaleString("zh-TW")} 所學校納入分析，學校周邊與人犬衝突熱區套疊面積約 ${fmtArea(row.overlay_area_km2_total_class1_5)}，其中第 4、5 級高優先區約 ${fmtArea(row.high_priority_area_km2_class4_5)}，占套疊區比例約 ${fmtPercent(row.high_priority_ratio_in_overlay)}。此結果可作為後續巡查、宣導與防治資源配置參考。`;
+        els.autoInsight.textContent = `本縣市共有 ${Math.round(num(row.school_count)).toLocaleString("zh-TW")} 所學校納入分析，學校周邊與人犬衝突熱區套疊面積約 ${fmtArea(row.overlay_area_km2_total_class1_5)}，其中第 4、5 級高優先關注區約 ${fmtArea(row.high_priority_area_km2_class4_5)}，占套疊區比例約 ${fmtPercent(row.high_priority_ratio_in_overlay)}。此結果可作為後續巡查、宣導與資源配置參考。`;
       }
+      renderClassChart(row);
+      els.countySelect.value = countyState.selectedCounty || "";
     }
 
     function className(priorityClass) {
-      const map = {
-        "1": "第 1 級",
-        "2": "第 2 級",
-        "3": "第 3 級",
-        "4": "第 4 級",
-        "5": "第 5 級"
-      };
-      return map[String(priorityClass)] || `第 ${priorityClass} 級`;
+      return { "1": "第 1 級", "2": "第 2 級", "3": "第 3 級", "4": "第 4 級", "5": "第 5 級" }[String(priorityClass)] || `第 ${priorityClass} 級`;
     }
 
     function classFullName(priorityClass) {
-      const map = {
-        "1": "低優先",
-        "2": "較低優先",
-        "3": "中度優先",
-        "4": "高度優先",
-        "5": "最高優先"
-      };
-      return map[String(priorityClass)] || "";
+      return { "1": "低優先", "2": "較低優先", "3": "中度優先", "4": "高度優先", "5": "最高優先" }[String(priorityClass)] || "";
     }
 
     function classColor(priorityClass) {
-      const map = {
-        "1": "var(--class1)",
-        "2": "var(--class2)",
-        "3": "var(--class3)",
-        "4": "var(--class4)",
-        "5": "var(--class5)"
-      };
-      return map[String(priorityClass)] || "var(--class0)";
+      return { "1": "var(--class1)", "2": "var(--class2)", "3": "var(--class3)", "4": "var(--class4)", "5": "var(--class5)" }[String(priorityClass)] || "var(--class0)";
     }
 
-    function renderClassChart() {
-      const row = getSelectedCountyRow();
-
-      if (!row) {
-        els.classChartTitle.textContent = "優先等級面積圖";
-        els.classChart.innerHTML = `<div class="friendly-empty">選擇縣市後顯示優先等級面積。</div>`;
-        return;
-      }
-
+    function renderClassChart(row) {
       els.classChartTitle.textContent = `${row.COUNTYNAME}｜優先等級面積圖`;
-
       if (isOutside(row)) {
         els.classChart.innerHTML = `<div class="friendly-empty">目前此縣市尚無完整分析成果。</div>`;
         return;
       }
-
-      let rows = state.classLong
-        .filter(item => item.COUNTYNAME === row.COUNTYNAME && String(item.priority_class) !== "0")
+      let rows = dataStore.classLong
+        .filter(item => countyKey(item.COUNTYNAME) === countyKey(row.COUNTYNAME) && String(item.priority_class) !== "0")
         .sort((a, b) => num(a.priority_class) - num(b.priority_class));
-
       if (!rows.length) {
-        rows = [1, 2, 3, 4, 5].map(level => ({
-          COUNTYNAME: row.COUNTYNAME,
-          priority_class: String(level),
-          area_km2: row[`class${level}_area_km2`] || 0
-        }));
+        rows = [1, 2, 3, 4, 5].map(level => ({ COUNTYNAME: row.COUNTYNAME, priority_class: String(level), area_km2: row[`class${level}_area_km2`] || 0 }));
       }
-
       const max = Math.max(...rows.map(item => num(item.area_km2)), 1);
-
       els.classChart.innerHTML = rows.map(item => {
         const area = num(item.area_km2);
         const width = Math.max(1, area / max * 100);
@@ -1572,139 +1403,26 @@
       }).join("");
     }
 
-    function renderRanking() {
-      // 排名清單改由 summary 單一資料來源即時計算，避免排名列與圖台縣市圖片不同步。
-      const source = state.summary;
-
-      if (!source.length) {
-        els.rankingList.innerHTML = `<div class="friendly-empty">目前統計資料暫時無法顯示，請確認資料檔案已放置於指定資料夾。</div>`;
-        return;
-      }
-
-      const key = state.sortKey;
-      const rows = source
-        .filter(row => !isOutside(row))
-        .slice()
-        .sort((a, b) => num(b[key]) - num(a[key]))
-        .slice(0, 10);
-
-      if (!rows.length) {
-        els.rankingList.innerHTML = `<div class="friendly-empty">目前尚無可排序的縣市成果。</div>`;
-        return;
-      }
-
-      const maxRatio = Math.max(...rows.map(row => num(row.high_priority_ratio_in_overlay)), 0.01);
-
-      els.rankingList.innerHTML = rows.map((row, idx) => {
-        const selected = row.COUNTYNAME === state.selectedCounty ? "is-selected" : "";
-        const ratioWidth = Math.max(2, num(row.high_priority_ratio_in_overlay) / maxRatio * 100);
-
-        return `
-          <article class="rank-row ${selected}" data-county-row="${row.COUNTYNAME}">
-            <div class="rank-no">${String(idx + 1).padStart(2, "0")}</div>
-            <div class="rank-city">
-              <strong>${row.COUNTYNAME || "—"}</strong>
-              <span>${fmtCount(row.school_count)}</span>
-              <div class="ratio-line"><span style="width:${ratioWidth}%"></span></div>
-            </div>
-            <div class="rank-metric">
-              ${fmtPercent(row.high_priority_ratio_in_overlay)}
-              <small>高優先區比例</small>
-            </div>
-            <div class="rank-metric">
-              ${fmtArea(row.high_priority_area_km2_class4_5)}
-              <small>高優先區面積</small>
-            </div>
-            <div class="rank-metric">
-              ${Math.round(num(row.school_count)).toLocaleString("zh-TW")}
-              <small>學校數</small>
-            </div>
-          </article>
-        `;
-      }).join("");
-
-      els.rankingList.querySelectorAll("[data-county-row]").forEach(rowEl => {
-        rowEl.addEventListener("click", () => {
-          state.selectedCounty = rowEl.dataset.countyRow;
-          state.mode = "county";
-          updateModeButtons();
-          syncCountySelects();
-          renderAll();
-          location.hash = "#dashboard";
-        });
-      });
-    }
-
-    function updateModeButtons() {
-      document.querySelectorAll("[data-mode-button]").forEach(button => {
-        button.classList.toggle("is-active", button.dataset.modeButton === state.mode);
-      });
-    }
-
-    function syncCountySelects() {
-      els.countySelect.value = state.selectedCounty || "";
-      els.heroCountySelect.value = state.selectedCounty || "";
-    }
-
-    function renderAll() {
-      renderLayerList();
-      renderNationalSummary();
-      renderMap();
-      renderMetrics();
-      renderClassChart();
-      renderRanking();
-      syncCountySelects();
-    }
-
     function bindEvents() {
-      document.querySelectorAll("[data-mode-button]").forEach(button => {
-        button.addEventListener("click", () => {
-          state.mode = button.dataset.modeButton;
-          if (state.mode === "county" && !state.selectedCounty) chooseDefaultCounty();
-          updateModeButtons();
-          syncCountySelects();
-          renderAll();
-        });
-      });
-
-      [els.countySelect, els.heroCountySelect].forEach(select => {
-        select.addEventListener("change", () => {
-          state.selectedCounty = select.value;
-          if (state.selectedCounty) state.mode = "county";
-          updateModeButtons();
-          syncCountySelects();
-          renderAll();
-        });
-      });
-
       els.sortSelect.addEventListener("change", () => {
-        state.sortKey = els.sortSelect.value;
+        countyState.sortKey = els.sortSelect.value;
+        renderRanking();
+      });
+      els.countySelect.addEventListener("change", () => {
+        countyState.selectedCounty = els.countySelect.value;
+        renderCountySection();
         renderRanking();
       });
     }
 
-    async function init() {
+    function init() {
       bindEvents();
-      renderLayerList();
-
-      const defaultLayer = getLayer();
-      setMapImage(els.mainMapImg, els.mainMapFrame, defaultLayer.path, defaultLayer.name);
-      setMapImage(els.heroMapImg, els.heroMapFrame, defaultLayer.path, defaultLayer.name);
-
-      try {
-        await loadAllData();
-        chooseDefaultCounty();
-        renderCountyOptions();
-        renderAll();
-      } catch (error) {
-        renderCountyOptions();
-        renderNationalSummary();
-        renderRanking();
-        renderMetrics();
-        renderClassChart();
-        els.autoInsight.textContent = "目前統計資料暫時無法顯示，請確認資料檔案已放置於指定資料夾。";
-        els.heroConclusion.textContent = "目前統計資料暫時無法顯示，但仍可查看已放置的全臺成果圖層。";
-      }
+      chooseDefaultCounty();
+      renderHeroSummary();
+      renderCountyOptions();
+      renderNationalSection();
+      renderRanking();
+      renderCountySection();
     }
 
     init();
